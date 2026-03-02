@@ -93,7 +93,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+      <section style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: 'var(--bg-primary)' }}>
         <img
           src="https://i.imgur.com/oo0BV2x.png"
           alt=""
@@ -111,7 +111,7 @@ export default function LandingPage() {
             inset: 0,
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
+            objectFit: 'contain',
             objectPosition: 'center',
             display: 'block'
           }}
@@ -119,7 +119,7 @@ export default function LandingPage() {
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 75%, rgba(255,255,255,1) 100%)',
+          background: 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 82%, rgba(255,255,255,1) 100%)',
           pointerEvents: 'none'
         }} />
       </section>
