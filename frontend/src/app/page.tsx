@@ -28,53 +28,156 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section style={{
-        paddingTop: 160, paddingBottom: 100, textAlign: 'center', position: 'relative', overflow: 'hidden'
+        paddingTop: 140, paddingBottom: 90, position: 'relative', overflow: 'hidden'
       }}>
         {/* Background glow */}
         <div style={{
-          position: 'absolute', top: -200, left: '50%', transform: 'translateX(-50%)',
-          width: 800, height: 600, borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(108,92,231,0.15) 0%, transparent 70%)',
+          position: 'absolute', top: -240, left: '50%', transform: 'translateX(-50%)',
+          width: 980, height: 720, borderRadius: '50%',
+          background: 'radial-gradient(ellipse, rgba(108,92,231,0.16) 0%, transparent 65%)',
           pointerEvents: 'none'
         }} />
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px', position: 'relative' }}>
-          <div style={{
-            display: 'inline-block', padding: '6px 18px', borderRadius: 20,
-            background: 'rgba(108,92,231,0.12)', border: '1px solid rgba(108,92,231,0.25)',
-            fontSize: 13, fontWeight: 600, color: 'var(--accent-secondary)', marginBottom: 28,
-            letterSpacing: 0.5
-          }}>
-            <FiZap style={{ display: 'inline', marginRight: 6, verticalAlign: -2 }} size={14} />
-            Plataforma de Pagamentos Inteligente
-          </div>
-          <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.1, marginBottom: 24, letterSpacing: -1.5 }}>
-            Venda online com <br />
-            <span className="gradient-text">split automático</span>
-          </h1>
-          <p style={{ fontSize: 18, color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 40px' }}>
-            Crie sua loja, cadastre produtos e receba pagamentos via Pix e cartão de crédito. O valor é dividido automaticamente entre você e a plataforma.
-          </p>
-          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/register" className="btn-primary" style={{ padding: '16px 36px', fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-              Começar Agora <FiArrowRight size={18} />
-            </Link>
-            <Link href="#features" className="btn-secondary" style={{ padding: '16px 36px', fontSize: 16 }}>
-              Ver Recursos
-            </Link>
-          </div>
-
-          {/* Stats */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 60, marginTop: 80, flexWrap: 'wrap' }}>
-            {[
-              { value: '99.9%', label: 'Uptime' },
-              { value: '< 1s', label: 'Pix Instantâneo' },
-              { value: '0%', label: 'Taxa de Adesão' },
-            ].map((stat, i) => (
-              <div key={i} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 32, fontWeight: 800 }} className="gradient-text">{stat.value}</div>
-                <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4 }}>{stat.label}</div>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', position: 'relative' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: 44, alignItems: 'center' }}>
+            <div>
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '8px 14px',
+                borderRadius: 999,
+                background: 'rgba(108,92,231,0.10)',
+                border: '1px solid rgba(108,92,231,0.22)',
+                fontSize: 12,
+                fontWeight: 800,
+                color: 'var(--accent-secondary)',
+                letterSpacing: 0.4,
+                marginBottom: 18
+              }}>
+                <FiZap size={14} />
+                Checkout 100% editável • Pix e cartão • Split automático
               </div>
-            ))}
+
+              <h1 style={{ fontSize: 54, fontWeight: 900, lineHeight: 1.06, letterSpacing: -1.6, marginBottom: 16 }}>
+                Uma plataforma para <br />
+                <span className="gradient-text">vender, cobrar e entregar</span> <br />
+                com conversão alta
+              </h1>
+
+              <p style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 560, marginBottom: 26 }}>
+                Crie sua loja, hospede produtos e conteúdos, personalize o checkout e acompanhe tudo no painel.
+                Pagamento aprovado? A confirmação e a entrega acontecem automaticamente.
+              </p>
+
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'center' }}>
+                <Link href="/register" className="btn-primary" style={{ padding: '14px 28px', fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                  Criar conta grátis <FiArrowRight size={16} />
+                </Link>
+                <Link href="#features" className="btn-secondary" style={{ padding: '14px 28px', fontSize: 14 }}>
+                  Ver recursos
+                </Link>
+              </div>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                gap: 14,
+                marginTop: 26,
+                maxWidth: 620
+              }}>
+                {[
+                  { value: '99.9%', label: 'Uptime' },
+                  { value: '< 1s', label: 'Pix instantâneo' },
+                  { value: '0%', label: 'Taxa de adesão' },
+                ].map((stat, i) => (
+                  <div key={i} style={{
+                    padding: 14,
+                    borderRadius: 16,
+                    border: '1px solid var(--border-color)',
+                    background: 'rgba(255,255,255,0.75)'
+                  }}>
+                    <div style={{ fontSize: 22, fontWeight: 900, lineHeight: 1.1 }} className="gradient-text">{stat.value}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', marginTop: 6 }}>{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <div className="gradient-border" style={{
+                borderRadius: 22,
+                background: 'rgba(255,255,255,0.75)',
+                boxShadow: '0 24px 80px rgba(17, 24, 39, 0.14)'
+              }}>
+                <div style={{
+                  borderRadius: 22,
+                  background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(243,244,246,0.92) 100%)',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    padding: '14px 16px',
+                    borderBottom: '1px solid var(--border-color)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
+                    <div style={{ fontSize: 12, fontWeight: 900, color: 'var(--text-primary)' }}>Checkout</div>
+                    <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--text-secondary)' }}>Prévia ao vivo</div>
+                  </div>
+
+                  <div style={{ padding: 16 }}>
+                    <div style={{
+                      borderRadius: 18,
+                      border: '1px solid var(--border-color)',
+                      background: 'radial-gradient(ellipse at top, rgba(108,92,231,0.12) 0%, rgba(255,255,255,0.85) 55%)',
+                      padding: 16,
+                      marginBottom: 12
+                    }}>
+                      <div style={{ fontSize: 12, fontWeight: 900, color: 'var(--text-secondary)', marginBottom: 6 }}>Oferta</div>
+                      <div style={{ fontSize: 16, fontWeight: 900, letterSpacing: -0.4, marginBottom: 6 }}>Produto digital + entrega automática</div>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                        <div style={{ fontSize: 28, fontWeight: 950 }} className="gradient-text">R$ 49,90</div>
+                        <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--text-secondary)' }}>à vista</div>
+                      </div>
+                      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 12 }}>
+                        {['Pix', 'Cartão', 'Boleto', 'Recorrência'].map((pill) => (
+                          <div key={pill} style={{
+                            padding: '6px 10px',
+                            borderRadius: 999,
+                            border: '1px solid rgba(108,92,231,0.22)',
+                            background: 'rgba(108,92,231,0.10)',
+                            color: 'var(--accent-secondary)',
+                            fontSize: 11,
+                            fontWeight: 800
+                          }}>
+                            {pill}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                      {[
+                        { title: 'Checkout editável', desc: 'Textos, cores e layout' },
+                        { title: 'Smart retry', desc: 'Mais aprovações no cartão' },
+                        { title: 'Split automático', desc: 'Regras por vendedor' },
+                        { title: 'Gestão completa', desc: 'Relatórios e métricas' },
+                      ].map((item) => (
+                        <div key={item.title} style={{
+                          borderRadius: 16,
+                          border: '1px solid var(--border-color)',
+                          background: 'rgba(255,255,255,0.75)',
+                          padding: 14
+                        }}>
+                          <div style={{ fontSize: 13, fontWeight: 900, marginBottom: 6 }}>{item.title}</div>
+                          <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.55 }}>{item.desc}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
