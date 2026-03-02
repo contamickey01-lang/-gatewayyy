@@ -223,58 +223,28 @@ export default function LandingPage() {
                 </div>
 
                 <div style={{
-                  padding: 18,
+                  padding: 14,
                   background: 'radial-gradient(ellipse at top, rgba(108,92,231,0.20) 0%, transparent 55%)'
                 }}>
-                  <div style={{
-                    height: 140,
-                    borderRadius: 18,
-                    border: '1px solid rgba(255,255,255,0.06)',
-                    background: 'linear-gradient(135deg, rgba(0,206,201,0.16) 0%, rgba(108,92,231,0.14) 55%, rgba(10,10,15,0.1) 100%)',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    marginBottom: 14
-                  }}>
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,10,15,0.15), rgba(10,10,15,0.85))' }} />
-                    <div style={{ position: 'relative', padding: 16 }}>
-                      <div style={{ fontSize: 16, fontWeight: 900, letterSpacing: -0.6, marginBottom: 6 }}>Sua loja no ar</div>
-                      <div style={{ fontSize: 12, color: 'rgba(226,232,240,0.72)', lineHeight: 1.55 }}>
-                        Banner + categorias + produtos em destaque
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                    {[
-                      { title: 'Produto', tag: 'Pix / Cartão' },
-                      { title: 'Conteúdo', tag: 'Área de membros' },
-                      { title: 'Entregável', tag: 'Download / acesso' },
-                      { title: 'Pedido', tag: 'Confirmação' },
-                    ].map((c, i) => (
-                      <div key={i} style={{
-                        padding: 14,
-                        borderRadius: 16,
-                        border: '1px solid rgba(255,255,255,0.06)',
-                        background: 'rgba(10,10,15,0.35)'
-                      }}>
-                        <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 8 }}>{c.title}</div>
-                        <div style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 8,
-                          padding: '6px 10px',
-                          borderRadius: 999,
-                          background: 'rgba(108,92,231,0.12)',
-                          border: '1px solid rgba(108,92,231,0.20)',
-                          color: 'var(--accent-secondary)',
-                          fontSize: 11,
-                          fontWeight: 700
-                        }}>
-                          {c.tag}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <img
+                    src="https://i.imgur.com/1AMnOpH.png"
+                    alt="Prévia da vitrine da loja"
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const img = e.currentTarget as HTMLImageElement;
+                      if (img.dataset.fallback === '1') return;
+                      img.dataset.fallback = '1';
+                      img.src = 'https://i.imgur.com/1AMnOpH.jpg';
+                    }}
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      display: 'block',
+                      borderRadius: 18,
+                      border: '1px solid rgba(255,255,255,0.06)'
+                    }}
+                  />
                 </div>
               </div>
             </div>
