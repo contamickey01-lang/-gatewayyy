@@ -150,8 +150,8 @@ export default function LandingPage() {
       </section>
 
       {/* Storefront */}
-      <section id="loja" style={{ padding: '20px 24px 80px', maxWidth: 1200, margin: '0 auto' }}>
-        <div className="glass-card" style={{
+      <section id="loja" style={{ padding: '20px 24px 80px', maxWidth: 1200, margin: '0 auto' }} className="landingStorefrontSection">
+        <div className="glass-card landingStorefrontCard" style={{
           padding: 48,
           position: 'relative',
           overflow: 'hidden'
@@ -163,7 +163,7 @@ export default function LandingPage() {
             pointerEvents: 'none'
           }} />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 40, alignItems: 'center', position: 'relative' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 40, alignItems: 'center', position: 'relative' }} className="landingStorefrontGrid">
             <div>
               <div style={{
                 display: 'inline-flex',
@@ -183,17 +183,16 @@ export default function LandingPage() {
                 Loja + Hospedagem integrada
               </div>
 
-              <h2 style={{ fontSize: 40, fontWeight: 800, lineHeight: 1.15, letterSpacing: -1.2, marginBottom: 14 }}>
-                Crie um <span className="gradient-text">site de vendas</span> completo <br />
-                e entregue tudo no mesmo lugar
+              <h2 style={{ fontSize: 40, fontWeight: 800, lineHeight: 1.15, letterSpacing: -1.2, marginBottom: 14 }} className="landingStorefrontTitle">
+                Crie um <span className="gradient-text">site de vendas</span> completo e entregue tudo no mesmo lugar
               </h2>
 
-              <p style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 620, marginBottom: 26 }}>
+              <p style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 620, marginBottom: 26 }} className="landingStorefrontDesc">
                 Dentro do nosso gateway, você monta sua loja, organiza seus produtos e hospeda conteúdos e entregáveis.
                 Do checkout ao acesso do cliente: tudo automatizado, com uma experiência premium.
               </p>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 28 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 28 }} className="landingStorefrontItems">
                 {[
                   { icon: <HiOutlineLightningBolt size={18} />, title: 'Loja pronta em minutos', desc: 'Slug, categorias, banner e vitrine com seu estilo.' },
                   { icon: <HiOutlineCreditCard size={18} />, title: 'Checkout integrado', desc: 'Pix e cartão com split automático e confirmação em tempo real.' },
@@ -229,7 +228,7 @@ export default function LandingPage() {
                 ))}
               </div>
 
-              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }} className="landingStorefrontActions">
                 <Link href="/register" className="btn-primary" style={{ padding: '14px 28px', fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                   Criar minha loja agora <FiArrowRight size={16} />
                 </Link>
@@ -239,7 +238,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative' }} className="landingStorefrontPreview">
               <div style={{
                 borderRadius: 22,
                 border: '1px solid var(--border-color)',

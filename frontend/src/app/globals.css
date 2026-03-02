@@ -418,4 +418,44 @@ body {
   .landingHeroImg {
     object-fit: cover !important;
   }
+
+  .landingStorefrontSection {
+    padding: 12px 14px 56px !important;
+  }
+
+  .landingStorefrontCard {
+    padding: 18px !important;
+    border-radius: 18px !important;
+  }
+
+  .landingStorefrontGrid {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .landingStorefrontTitle {
+    font-size: 28px !important;
+    letter-spacing: -0.6px !important;
+    line-height: 1.15 !important;
+  }
+
+  .landingStorefrontDesc {
+    font-size: 14px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .landingStorefrontItems {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .landingStorefrontActions {
+    gap: 10px !important;
+  }
+
+  .landingStorefrontActions a {
+    width: 100% !important;
+    justify-content: center !important;
+  }
 }
