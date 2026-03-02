@@ -221,69 +221,33 @@ export default function LandingPage() {
               }}>
                 <div style={{
                   borderRadius: 22,
-                  background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(243,244,246,0.92) 100%)',
-                  overflow: 'hidden'
+                  background: 'linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(243,244,246,0.92) 100%)',
+                  overflow: 'hidden',
+                  padding: 10
                 }}>
-                  <div style={{
-                    padding: '14px 16px',
-                    borderBottom: '1px solid var(--border-color)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}>
-                    <div style={{ fontSize: 12, fontWeight: 900, color: 'var(--text-primary)' }}>Checkout</div>
-                    <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--text-secondary)' }}>Prévia ao vivo</div>
-                  </div>
-
-                  <div style={{ padding: 16 }}>
-                    <div style={{
-                      borderRadius: 18,
-                      border: '1px solid var(--border-color)',
-                      background: 'radial-gradient(ellipse at top, rgba(108,92,231,0.12) 0%, rgba(255,255,255,0.85) 55%)',
-                      padding: 16,
-                      marginBottom: 12
-                    }}>
-                      <div style={{ fontSize: 12, fontWeight: 900, color: 'var(--text-secondary)', marginBottom: 6 }}>Oferta</div>
-                      <div style={{ fontSize: 16, fontWeight: 900, letterSpacing: -0.4, marginBottom: 6 }}>Produto digital + entrega automática</div>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                        <div style={{ fontSize: 28, fontWeight: 950 }} className="gradient-text">R$ 49,90</div>
-                        <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--text-secondary)' }}>à vista</div>
-                      </div>
-                      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 12 }}>
-                        {['Pix', 'Cartão', 'Boleto', 'Recorrência'].map((pill) => (
-                          <div key={pill} style={{
-                            padding: '6px 10px',
-                            borderRadius: 999,
-                            border: '1px solid rgba(108,92,231,0.22)',
-                            background: 'rgba(108,92,231,0.10)',
-                            color: 'var(--accent-secondary)',
-                            fontSize: 11,
-                            fontWeight: 800
-                          }}>
-                            {pill}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                      {[
-                        { title: 'Checkout editável', desc: 'Textos, cores e layout' },
-                        { title: 'Smart retry', desc: 'Mais aprovações no cartão' },
-                        { title: 'Split automático', desc: 'Regras por vendedor' },
-                        { title: 'Gestão completa', desc: 'Relatórios e métricas' },
-                      ].map((item) => (
-                        <div key={item.title} style={{
-                          borderRadius: 16,
-                          border: '1px solid var(--border-color)',
-                          background: 'rgba(255,255,255,0.75)',
-                          padding: 14
-                        }}>
-                          <div style={{ fontSize: 13, fontWeight: 900, marginBottom: 6 }}>{item.title}</div>
-                          <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.55 }}>{item.desc}</div>
-                        </div>
-                      ))}
-                    </div>
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 11', borderRadius: 16, overflow: 'hidden' }}>
+                    <img
+                      src="https://i.imgur.com/oo0BV2x.png"
+                      alt="Prévia do produto"
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const img = e.currentTarget as HTMLImageElement;
+                        if (img.dataset.fallback === '1') return;
+                        img.dataset.fallback = '1';
+                        img.src = 'https://i.imgur.com/oo0BV2x.jpg';
+                      }}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                        display: 'block',
+                        filter: 'saturate(1.08) contrast(1.04)'
+                      }}
+                    />
                   </div>
                 </div>
               </div>
