@@ -170,10 +170,53 @@ export default function LandingPage() {
             </div>
 
             <div style={{ position: 'relative' }}>
+              <div style={{
+                position: 'absolute',
+                inset: -56,
+                pointerEvents: 'none',
+                zIndex: 0,
+                opacity: 0.55
+              }}>
+                <img
+                  src="https://i.imgur.com/XmXBuoi.png"
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const img = e.currentTarget as HTMLImageElement;
+                    if (img.dataset.fallback === '1') return;
+                    img.dataset.fallback = '1';
+                    img.src = 'https://i.imgur.com/XmXBuoi.jpg';
+                  }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    borderRadius: 28,
+                    filter: 'saturate(1.05) contrast(1.02)'
+                  }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  borderRadius: 28,
+                  background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.85) 55%, rgba(255,255,255,1) 80%)'
+                }} />
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  borderRadius: 28,
+                  background: 'linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.98) 68%)'
+                }} />
+              </div>
+
               <div className="gradient-border" style={{
                 borderRadius: 22,
                 background: 'rgba(255,255,255,0.75)',
-                boxShadow: '0 24px 80px rgba(17, 24, 39, 0.14)'
+                boxShadow: '0 24px 80px rgba(17, 24, 39, 0.14)',
+                position: 'relative',
+                zIndex: 1
               }}>
                 <div style={{
                   borderRadius: 22,
