@@ -6,7 +6,7 @@ import { FiArrowRight, FiZap, FiLock, FiTrendingUp } from 'react-icons/fi';
 
 export default function LandingPage() {
   return (
-    <div className="force-light" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', minHeight: '100vh' }}>
+    <div id="inicio" className="force-light" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', minHeight: '100vh' }}>
       {/* Header */}
       <header style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
@@ -14,15 +14,66 @@ export default function LandingPage() {
         borderBottom: '1px solid var(--border-color)',
         boxShadow: '0 8px 24px rgba(17, 24, 39, 0.06)'
       }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '14px 24px', display: 'flex', alignItems: 'center', gap: 18 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
             <img src="/logo.png" alt="GouPay Logo" style={{ width: 56, height: 56, objectFit: 'contain', flexShrink: 0 }} />
             <span style={{ fontSize: 20, fontWeight: 700 }}>Gou<span className="gradient-text">Pay</span></span>
           </div>
-          <nav style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
-            <Link href="/login" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 14, fontWeight: 500, transition: 'color 0.2s' }}>Entrar</Link>
-            <Link href="/register" className="btn-primary" style={{ padding: '10px 24px', fontSize: 13 }}>Criar Conta Grátis</Link>
-          </nav>
+
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <nav style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 18,
+              padding: '10px 14px',
+              borderRadius: 999,
+              border: '1px solid rgba(108,92,231,0.18)',
+              background: 'rgba(255,255,255,0.75)'
+            }}>
+              {[
+                { href: '#inicio', label: 'Início' },
+                { href: '#features', label: 'Recursos' },
+                { href: '#loja', label: 'Loja' },
+                { href: '#footer', label: 'Sobre nós' },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  style={{
+                    color: 'var(--text-secondary)',
+                    textDecoration: 'none',
+                    fontSize: 13,
+                    fontWeight: 700,
+                    padding: '6px 10px',
+                    borderRadius: 999
+                  }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+            <Link
+              href="/login"
+              style={{
+                textDecoration: 'none',
+                fontSize: 13,
+                fontWeight: 800,
+                padding: '10px 14px',
+                borderRadius: 999,
+                border: '1px solid var(--border-color)',
+                background: 'rgba(255,255,255,0.65)',
+                color: 'var(--text-primary)'
+              }}
+            >
+              Login
+            </Link>
+            <Link href="/register" className="btn-primary" style={{ padding: '10px 16px', fontSize: 13, borderRadius: 999 }}>
+              Cadastrar-se
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -401,7 +452,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer style={{
+      <footer id="footer" style={{
         borderTop: '1px solid var(--border-color)', padding: '40px 24px',
         textAlign: 'center', color: 'var(--text-muted)', fontSize: 13
       }}>
