@@ -246,29 +246,46 @@ export default function LandingPage() {
                     }}
                   />
 
-                  <img
-                    src="https://i.imgur.com/undefined.png"
-                    alt="Prévia adicional da vitrine"
-                    loading="lazy"
-                    referrerPolicy="no-referrer"
-                    onError={(e) => {
-                      const img = e.currentTarget as HTMLImageElement;
-                      if (img.dataset.fallback === '2') {
-                        img.style.display = 'none';
-                        return;
-                      }
-                      img.dataset.fallback = '2';
-                      img.src = 'https://imgur.com/undefined';
-                    }}
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      display: 'block',
-                      marginTop: 12,
-                      borderRadius: 18,
-                      border: '1px solid rgba(255,255,255,0.06)'
-                    }}
-                  />
+                  <div style={{
+                    marginTop: 12,
+                    borderRadius: 18,
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    background: 'rgba(10,10,15,0.35)',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{
+                      padding: 14,
+                      borderBottom: '1px solid rgba(255,255,255,0.06)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 10
+                    }}>
+                      <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--text-secondary)' }}>Imagem adicional</div>
+                      <a
+                        href="https://imgur.com/undefined"
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ fontSize: 12, fontWeight: 800, color: 'var(--accent-secondary)' }}
+                      >
+                        Abrir link
+                      </a>
+                    </div>
+                    <div style={{ padding: 14 }}>
+                      <div style={{
+                        width: '100%',
+                        borderRadius: 16,
+                        border: '1px dashed rgba(255,255,255,0.14)',
+                        background: 'rgba(10,10,15,0.25)',
+                        padding: 16,
+                        color: 'var(--text-secondary)',
+                        fontSize: 13,
+                        lineHeight: 1.6
+                      }}>
+                        O link informado está como <strong>imgur.com/undefined</strong> e não retorna uma imagem válida. Assim que você me enviar o link correto, eu coloco a imagem aqui e faço o deploy.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
