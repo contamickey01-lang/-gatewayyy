@@ -93,167 +93,35 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section style={{
-        paddingTop: 170, paddingBottom: 90, position: 'relative', overflow: 'hidden'
-      }}>
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-          <img
-            src="https://i.imgur.com/XmXBuoi.png"
-            alt=""
-            aria-hidden="true"
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            onError={(e) => {
-              const img = e.currentTarget as HTMLImageElement;
-              if (img.dataset.fallback === '1') return;
-              img.dataset.fallback = '1';
-              img.src = 'https://i.imgur.com/XmXBuoi.jpg';
-            }}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center',
-              filter: 'saturate(1.15) contrast(1.1) brightness(0.98)',
-              transform: 'scale(1.02)',
-              opacity: 0.95
-            }}
-          />
-          <div style={{
+      <section style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+        <img
+          src="https://i.imgur.com/oo0BV2x.png"
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          onError={(e) => {
+            const img = e.currentTarget as HTMLImageElement;
+            if (img.dataset.fallback === '1') return;
+            img.dataset.fallback = '1';
+            img.src = 'https://i.imgur.com/oo0BV2x.jpg';
+          }}
+          style={{
             position: 'absolute',
             inset: 0,
-            background: 'rgba(255,255,255,0.18)',
-            backdropFilter: 'blur(14px)',
-            WebkitBackdropFilter: 'blur(14px)'
-          }}>
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'radial-gradient(ellipse at top, rgba(108,92,231,0.22) 0%, rgba(255,255,255,0.10) 55%, rgba(255,255,255,0.22) 100%)'
-            }} />
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.10) 40%, rgba(255,255,255,0.35) 100%)'
-            }} />
-          </div>
-        </div>
-        {/* Background glow */}
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+            display: 'block'
+          }}
+        />
         <div style={{
-          position: 'absolute', top: -240, left: '50%', transform: 'translateX(-50%)',
-          width: 980, height: 720, borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(108,92,231,0.16) 0%, transparent 65%)',
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 75%, rgba(255,255,255,1) 100%)',
           pointerEvents: 'none'
         }} />
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: 44, alignItems: 'center' }}>
-            <div>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 10,
-                padding: '8px 14px',
-                borderRadius: 999,
-                background: 'rgba(108,92,231,0.10)',
-                border: '1px solid rgba(108,92,231,0.22)',
-                fontSize: 12,
-                fontWeight: 800,
-                color: 'var(--accent-secondary)',
-                letterSpacing: 0.4,
-                marginBottom: 18
-              }}>
-                <FiZap size={14} />
-                Checkout 100% editável • Pix e cartão • Split automático
-              </div>
-
-              <h1 style={{ fontSize: 54, fontWeight: 900, lineHeight: 1.06, letterSpacing: -1.6, marginBottom: 16 }}>
-                Uma plataforma para <br />
-                <span className="gradient-text">vender, cobrar e entregar</span> <br />
-                com conversão alta
-              </h1>
-
-              <p style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 560, marginBottom: 26 }}>
-                Crie sua loja, hospede produtos e conteúdos, personalize o checkout e acompanhe tudo no painel.
-                Pagamento aprovado? A confirmação e a entrega acontecem automaticamente.
-              </p>
-
-              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'center' }}>
-                <Link href="/register" className="btn-primary" style={{ padding: '14px 28px', fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                  Criar conta grátis <FiArrowRight size={16} />
-                </Link>
-                <Link href="#features" className="btn-secondary" style={{ padding: '14px 28px', fontSize: 14 }}>
-                  Ver recursos
-                </Link>
-              </div>
-
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                gap: 14,
-                marginTop: 26,
-                maxWidth: 620
-              }}>
-                {[
-                  { value: '99.9%', label: 'Uptime' },
-                  { value: '< 1s', label: 'Pix instantâneo' },
-                  { value: '0%', label: 'Taxa de adesão' },
-                ].map((stat, i) => (
-                  <div key={i} style={{
-                    padding: 14,
-                    borderRadius: 16,
-                    border: '1px solid var(--border-color)',
-                    background: 'rgba(255,255,255,0.75)'
-                  }}>
-                    <div style={{ fontSize: 22, fontWeight: 900, lineHeight: 1.1 }} className="gradient-text">{stat.value}</div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', marginTop: 6 }}>{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div style={{ position: 'relative' }}>
-              <div className="gradient-border" style={{
-                borderRadius: 22,
-                background: 'rgba(255,255,255,0.75)',
-                boxShadow: '0 24px 80px rgba(17, 24, 39, 0.14)',
-                position: 'relative',
-                zIndex: 1
-              }}>
-                <div style={{
-                  borderRadius: 22,
-                  background: 'linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(243,244,246,0.92) 100%)',
-                  overflow: 'hidden',
-                  padding: 10
-                }}>
-                  <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 11', borderRadius: 16, overflow: 'hidden' }}>
-                    <img
-                      src="https://i.imgur.com/oo0BV2x.png"
-                      alt="Prévia do produto"
-                      loading="lazy"
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        const img = e.currentTarget as HTMLImageElement;
-                        if (img.dataset.fallback === '1') return;
-                        img.dataset.fallback = '1';
-                        img.src = 'https://i.imgur.com/oo0BV2x.jpg';
-                      }}
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center',
-                        display: 'block',
-                        filter: 'saturate(1.08) contrast(1.04)'
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* Features */}
