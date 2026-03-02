@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 export default function StoreSettingsPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [uploadingBanner, setUploadingBanner] = useState(false);
     const [form, setForm] = useState({
         store_active: false,
         store_name: '',
@@ -40,7 +41,7 @@ export default function StoreSettingsPage() {
         }
     };
 
-    const update = (field: string, value: any) => setForm({ ...form, [field]: value });
+    const update = (field: string, value: any) => setForm(prev => ({ ...prev, [field]: value }));
 
     const handleSave = async () => {
         setSaving(true);
@@ -71,6 +72,39 @@ export default function StoreSettingsPage() {
     };
 
     if (loading) return <div style={{ textAlign: 'center', padding: 40 }}>Carregando...</div>;
+
+    const handleBannerUpload = async (file: File) => {
+        setUploadingBanner(true);
+        const loadingToast = toast.loading('Enviando imagem...');
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                body: formData
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Erro no upload');
+
+            const url = data.url as string;
+            update('store_banner_url', url);
+            toast.success('Imagem enviada!', { id: loadingToast });
+
+            const { data: saved } = await authAPI.updateProfile({ store_banner_url: url });
+            const updatedUser = saved.user || saved;
+            if (updatedUser) {
+                localStorage.setItem('user', JSON.stringify(updatedUser));
+                update('store_banner_url', updatedUser.store_banner_url || url);
+            }
+        } catch (err: any) {
+            toast.error(err.message || 'Erro ao enviar imagem', { id: loadingToast });
+        } finally {
+            setUploadingBanner(false);
+        }
+    };
 
 
     return (
@@ -123,33 +157,18 @@ export default function StoreSettingsPage() {
                                 onChange={async (e) => {
                                     const file = e.target.files?.[0];
                                     if (!file) return;
-
-                                    const formData = new FormData();
-                                    formData.append('file', file);
-
-                                    const loadingToast = toast.loading('Enviando imagem...');
-                                    try {
-                                        const res = await fetch('/api/upload', {
-                                            method: 'POST',
-                                            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-                                            body: formData
-                                        });
-                                        const data = await res.json();
-                                        if (!res.ok) throw new Error(data.error || 'Erro no upload');
-
-                                        update('store_banner_url', data.url);
-                                        toast.success('Imagem enviada!', { id: loadingToast });
-                                    } catch (err: any) {
-                                        toast.error(err.message, { id: loadingToast });
-                                    }
+                                    await handleBannerUpload(file);
+                                    e.target.value = '';
                                 }}
+                                disabled={uploadingBanner}
                                 style={{
                                     fontSize: 13,
                                     padding: '6px',
                                     border: '1px dashed var(--border-color)',
                                     borderRadius: 8,
                                     width: '100%',
-                                    cursor: 'pointer'
+                                    cursor: uploadingBanner ? 'not-allowed' : 'pointer',
+                                    opacity: uploadingBanner ? 0.7 : 1
                                 }}
                             />
                         </div>
