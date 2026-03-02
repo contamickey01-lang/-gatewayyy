@@ -108,6 +108,180 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Storefront */}
+      <section id="loja" style={{ padding: '20px 24px 80px', maxWidth: 1200, margin: '0 auto' }}>
+        <div className="glass-card" style={{
+          padding: 48,
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(ellipse at top left, rgba(108,92,231,0.18) 0%, transparent 55%), radial-gradient(ellipse at bottom right, rgba(0,206,201,0.10) 0%, transparent 55%)',
+            pointerEvents: 'none'
+          }} />
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 40, alignItems: 'center', position: 'relative' }}>
+            <div>
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '8px 14px',
+                borderRadius: 999,
+                background: 'rgba(0,206,201,0.10)',
+                border: '1px solid rgba(0,206,201,0.18)',
+                color: '#00cec9',
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: 0.4,
+                marginBottom: 18
+              }}>
+                <HiOutlineGlobeAlt size={16} />
+                Loja + Hospedagem integrada
+              </div>
+
+              <h2 style={{ fontSize: 40, fontWeight: 800, lineHeight: 1.15, letterSpacing: -1.2, marginBottom: 14 }}>
+                Crie um <span className="gradient-text">site de vendas</span> completo <br />
+                e entregue tudo no mesmo lugar
+              </h2>
+
+              <p style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.75, maxWidth: 620, marginBottom: 26 }}>
+                Dentro do nosso gateway, você monta sua loja, organiza seus produtos e hospeda conteúdos e entregáveis.
+                Do checkout ao acesso do cliente: tudo automatizado, com uma experiência premium.
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 28 }}>
+                {[
+                  { icon: <HiOutlineLightningBolt size={18} />, title: 'Loja pronta em minutos', desc: 'Slug, categorias, banner e vitrine com seu estilo.' },
+                  { icon: <HiOutlineCreditCard size={18} />, title: 'Checkout integrado', desc: 'Pix e cartão com split automático e confirmação em tempo real.' },
+                  { icon: <HiOutlineShieldCheck size={18} />, title: 'Entrega e acesso', desc: 'Conteúdos e entregáveis organizados para o cliente acessar.' },
+                  { icon: <HiOutlineChartBar size={18} />, title: 'Gestão centralizada', desc: 'Produtos, pedidos e métricas no painel do vendedor.' },
+                ].map((item, i) => (
+                  <div key={i} style={{
+                    display: 'flex',
+                    gap: 12,
+                    padding: 16,
+                    borderRadius: 16,
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    background: 'rgba(10,10,15,0.35)'
+                  }}>
+                    <div style={{
+                      width: 34,
+                      height: 34,
+                      borderRadius: 12,
+                      background: 'rgba(108,92,231,0.14)',
+                      color: 'var(--accent-secondary)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      {item.icon}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4, color: 'var(--text-primary)' }}>{item.title}</div>
+                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{item.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                <Link href="/register" className="btn-primary" style={{ padding: '14px 28px', fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                  Criar minha loja agora <FiArrowRight size={16} />
+                </Link>
+                <Link href="#features" className="btn-secondary" style={{ padding: '14px 28px', fontSize: 14 }}>
+                  Ver recursos do gateway
+                </Link>
+              </div>
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <div style={{
+                borderRadius: 22,
+                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'linear-gradient(180deg, rgba(20,20,28,0.75) 0%, rgba(10,10,15,0.65) 100%)',
+                overflow: 'hidden',
+                boxShadow: '0 24px 80px rgba(0,0,0,0.45)'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '14px 16px',
+                  borderBottom: '1px solid rgba(255,255,255,0.06)',
+                  background: 'rgba(10,10,15,0.35)'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ width: 10, height: 10, borderRadius: 999, background: 'rgba(255,107,107,0.9)' }} />
+                    <span style={{ width: 10, height: 10, borderRadius: 999, background: 'rgba(255,214,102,0.9)' }} />
+                    <span style={{ width: 10, height: 10, borderRadius: 999, background: 'rgba(46,213,115,0.9)' }} />
+                  </div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>Vitrine da Loja</div>
+                </div>
+
+                <div style={{
+                  padding: 18,
+                  background: 'radial-gradient(ellipse at top, rgba(108,92,231,0.20) 0%, transparent 55%)'
+                }}>
+                  <div style={{
+                    height: 140,
+                    borderRadius: 18,
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    background: 'linear-gradient(135deg, rgba(0,206,201,0.16) 0%, rgba(108,92,231,0.14) 55%, rgba(10,10,15,0.1) 100%)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    marginBottom: 14
+                  }}>
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,10,15,0.15), rgba(10,10,15,0.85))' }} />
+                    <div style={{ position: 'relative', padding: 16 }}>
+                      <div style={{ fontSize: 16, fontWeight: 900, letterSpacing: -0.6, marginBottom: 6 }}>Sua loja no ar</div>
+                      <div style={{ fontSize: 12, color: 'rgba(226,232,240,0.72)', lineHeight: 1.55 }}>
+                        Banner + categorias + produtos em destaque
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    {[
+                      { title: 'Produto', tag: 'Pix / Cartão' },
+                      { title: 'Conteúdo', tag: 'Área de membros' },
+                      { title: 'Entregável', tag: 'Download / acesso' },
+                      { title: 'Pedido', tag: 'Confirmação' },
+                    ].map((c, i) => (
+                      <div key={i} style={{
+                        padding: 14,
+                        borderRadius: 16,
+                        border: '1px solid rgba(255,255,255,0.06)',
+                        background: 'rgba(10,10,15,0.35)'
+                      }}>
+                        <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 8 }}>{c.title}</div>
+                        <div style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          padding: '6px 10px',
+                          borderRadius: 999,
+                          background: 'rgba(108,92,231,0.12)',
+                          border: '1px solid rgba(108,92,231,0.20)',
+                          color: 'var(--accent-secondary)',
+                          fontSize: 11,
+                          fontWeight: 700
+                        }}>
+                          {c.tag}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section style={{ padding: '80px 24px', textAlign: 'center' }}>
         <div className="glass-card" style={{
