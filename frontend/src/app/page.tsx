@@ -114,27 +114,27 @@ export default function LandingPage() {
               height: '100%',
               objectFit: 'cover',
               objectPosition: 'center',
-              filter: 'saturate(1.05) contrast(1.02)',
-              transform: 'scale(1.03)',
-              opacity: 0.8
+              filter: 'saturate(1.15) contrast(1.1) brightness(0.98)',
+              transform: 'scale(1.02)',
+              opacity: 0.95
             }}
           />
           <div style={{
             position: 'absolute',
             inset: 0,
-            background: 'rgba(255,255,255,0.45)',
-            backdropFilter: 'blur(26px)',
-            WebkitBackdropFilter: 'blur(26px)'
+            background: 'rgba(255,255,255,0.18)',
+            backdropFilter: 'blur(14px)',
+            WebkitBackdropFilter: 'blur(14px)'
           }}>
             <div style={{
               position: 'absolute',
               inset: 0,
-              background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.68) 0%, rgba(255,255,255,0.18) 58%, rgba(255,255,255,0.75) 100%)'
+              background: 'radial-gradient(ellipse at top, rgba(108,92,231,0.22) 0%, rgba(255,255,255,0.10) 55%, rgba(255,255,255,0.22) 100%)'
             }} />
             <div style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.65) 30%, rgba(255,255,255,0.95) 100%)'
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.10) 40%, rgba(255,255,255,0.35) 100%)'
             }} />
           </div>
         </div>
