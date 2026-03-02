@@ -24,6 +24,8 @@
 
 .force-light {
   color-scheme: light;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   --bg-primary: #ffffff;
   --bg-secondary: #f3f4f6;
   --bg-card: #ffffff;
@@ -32,9 +34,9 @@
   --text-primary: #111827;
   --text-secondary: #4b5563;
   --text-muted: #6b7280;
-  --accent-primary: #8e44ad;
-  --accent-secondary: #a29bfe;
-  --accent-gradient: linear-gradient(135deg, #8e44ad 0%, #9b59b6 50%, #a29bfe 100%);
+  --accent-primary: #6c5ce7;
+  --accent-secondary: #6c5ce7;
+  --accent-gradient: linear-gradient(135deg, #6c5ce7 0%, #8e44ad 55%, #a29bfe 100%);
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;

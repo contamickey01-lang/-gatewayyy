@@ -6,7 +6,7 @@ import { FiArrowRight, FiZap, FiLock, FiTrendingUp } from 'react-icons/fi';
 
 export default function LandingPage() {
   return (
-    <div className="force-light" style={{ background: 'var(--bg-primary)', minHeight: '100vh' }}>
+    <div className="force-light" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', minHeight: '100vh' }}>
       {/* Header */}
       <header style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
