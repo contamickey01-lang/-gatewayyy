@@ -111,34 +111,9 @@ export default function LandingPage() {
             inset: 0,
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
+            objectFit: 'fill',
             objectPosition: 'center',
-            filter: 'blur(22px) saturate(1.1) contrast(1.05)',
-            transform: 'scale(1.06)',
-            opacity: 0.9
-          }}
-        />
-        <img
-          src="https://i.imgur.com/oo0BV2x.png"
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          onError={(e) => {
-            const img = e.currentTarget as HTMLImageElement;
-            if (img.dataset.fallback === '1') return;
-            img.dataset.fallback = '1';
-            img.src = 'https://i.imgur.com/oo0BV2x.jpg';
-          }}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            objectPosition: 'center',
-            display: 'block',
-            zIndex: 1
+            display: 'block'
           }}
         />
         <div style={{
