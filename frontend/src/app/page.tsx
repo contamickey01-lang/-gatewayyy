@@ -96,6 +96,48 @@ export default function LandingPage() {
       <section style={{
         paddingTop: 170, paddingBottom: 90, position: 'relative', overflow: 'hidden'
       }}>
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+          <img
+            src="https://i.imgur.com/XmXBuoi.png"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              const img = e.currentTarget as HTMLImageElement;
+              if (img.dataset.fallback === '1') return;
+              img.dataset.fallback = '1';
+              img.src = 'https://i.imgur.com/XmXBuoi.jpg';
+            }}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center',
+              filter: 'saturate(1.05) contrast(1.02)',
+              transform: 'scale(1.03)',
+              opacity: 0.8
+            }}
+          />
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(255,255,255,0.45)',
+            backdropFilter: 'blur(26px)',
+            WebkitBackdropFilter: 'blur(26px)'
+          }}>
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.68) 0%, rgba(255,255,255,0.18) 58%, rgba(255,255,255,0.75) 100%)'
+            }} />
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.65) 30%, rgba(255,255,255,0.95) 100%)'
+            }} />
+          </div>
+        </div>
         {/* Background glow */}
         <div style={{
           position: 'absolute', top: -240, left: '50%', transform: 'translateX(-50%)',
@@ -103,7 +145,7 @@ export default function LandingPage() {
           background: 'radial-gradient(ellipse, rgba(108,92,231,0.16) 0%, transparent 65%)',
           pointerEvents: 'none'
         }} />
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', position: 'relative' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: 44, alignItems: 'center' }}>
             <div>
               <div style={{
@@ -170,51 +212,6 @@ export default function LandingPage() {
             </div>
 
             <div style={{ position: 'relative' }}>
-              <div style={{
-                position: 'absolute',
-                inset: -56,
-                pointerEvents: 'none',
-                zIndex: 0,
-                borderRadius: 28,
-                overflow: 'hidden',
-                border: '1px solid rgba(108,92,231,0.14)',
-                boxShadow: '0 28px 90px rgba(108,92,231,0.10)'
-              }}>
-                <img
-                  src="https://i.imgur.com/XmXBuoi.png"
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                  referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    const img = e.currentTarget as HTMLImageElement;
-                    if (img.dataset.fallback === '1') return;
-                    img.dataset.fallback = '1';
-                    img.src = 'https://i.imgur.com/XmXBuoi.jpg';
-                  }}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    opacity: 0.72,
-                    filter: 'saturate(1.05) contrast(1.02)'
-                  }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'rgba(255,255,255,0.38)',
-                  backdropFilter: 'blur(22px)',
-                  WebkitBackdropFilter: 'blur(22px)'
-                }}>
-                  <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.18) 55%, rgba(255,255,255,0.42) 100%)'
-                  }} />
-                </div>
-              </div>
-
               <div className="gradient-border" style={{
                 borderRadius: 22,
                 background: 'rgba(255,255,255,0.75)',
