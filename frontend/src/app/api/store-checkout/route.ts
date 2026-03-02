@@ -9,6 +9,31 @@ export async function POST(req: Request) {
         const enableCreditCard = process.env.ENABLE_CREDIT_CARD === 'true';
         const normalizedPaymentMethod = (body.payment_method === 'card' ? 'credit_card' : body.payment_method) || 'pix';
 
+        const extractPix = (pagarmeOrder: any) => {
+            const charge = pagarmeOrder?.charges?.[0];
+            const lastTransaction = charge?.last_transaction;
+
+            const candidates = [
+                lastTransaction?.pix,
+                lastTransaction,
+                charge?.pix,
+                pagarmeOrder?.payments?.[0]?.pix,
+                pagarmeOrder?.payments?.[0],
+            ].filter(Boolean);
+
+            for (const c of candidates) {
+                const qrCode = c?.qr_code || c?.qrCode;
+                const qrCodeUrl = c?.qr_code_url || c?.qrCodeUrl;
+                const expiresAt = c?.expires_at || c?.expiresAt;
+
+                if (qrCode || qrCodeUrl) {
+                    return { qr_code: qrCode, qr_code_url: qrCodeUrl, expires_at: expiresAt };
+                }
+            }
+
+            return null;
+        };
+
         if (!items_cart || items_cart.length === 0) {
             return NextResponse.json({ error: 'Carrinho vazio.' }, { status: 400 });
         }
@@ -130,15 +155,34 @@ export async function POST(req: Request) {
         };
 
         // EXTREMTELY ROBUST PIX EXTRACTION
-        let diagnosticPixError = null;
         if (method === 'pix') {
-            const pixInfo = lastTransaction?.pix || lastTransaction || pagarmeOrder.payments?.[0]?.pix;
-            orderData.pix_qr_code = pixInfo?.qr_code;
-            orderData.pix_qr_code_url = pixInfo?.qr_code_url;
-            orderData.pix_expires_at = pixInfo?.expires_at;
+            let pix = extractPix(pagarmeOrder);
+            if (!pix) {
+                try {
+                    const hydrated = await PagarmeService.getOrder(pagarmeOrder.id);
+                    pix = extractPix(hydrated);
+                    if (pix) pagarmeOrder = hydrated;
+                } catch (e) {
+                }
+            }
 
-            if (!orderData.pix_qr_code) {
-                diagnosticPixError = "Pagar.me não retornou código Pix no checkout de loja.";
+            orderData.pix_qr_code = pix?.qr_code;
+            orderData.pix_qr_code_url = pix?.qr_code_url;
+            orderData.pix_expires_at = pix?.expires_at;
+
+            if (!orderData.pix_qr_code && !orderData.pix_qr_code_url) {
+                console.error('[STORE CHECKOUT] Pix data NOT found', JSON.stringify({
+                    pagarme_order_id: pagarmeOrder?.id,
+                    pagarme_status: pagarmeOrder?.status,
+                    has_charges: !!pagarmeOrder?.charges?.length,
+                    charge_status: pagarmeOrder?.charges?.[0]?.status,
+                    has_last_transaction: !!pagarmeOrder?.charges?.[0]?.last_transaction
+                }));
+
+                return NextResponse.json(
+                    { error: 'O pedido foi gerado, mas o Pagar.me não retornou o QR Code.' },
+                    { status: 502 }
+                );
             }
         }
 

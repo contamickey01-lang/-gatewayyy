@@ -13,6 +13,31 @@ export async function POST(req: NextRequest) {
         const enableCreditCard = process.env.ENABLE_CREDIT_CARD === 'true';
         const normalizedPaymentMethod = (body.payment_method === 'card' ? 'credit_card' : body.payment_method) || 'pix';
 
+        const extractPix = (pagarmeOrder: any) => {
+            const charge = pagarmeOrder?.charges?.[0];
+            const lastTransaction = charge?.last_transaction;
+
+            const candidates = [
+                lastTransaction?.pix,
+                lastTransaction,
+                charge?.pix,
+                pagarmeOrder?.payments?.[0]?.pix,
+                pagarmeOrder?.payments?.[0],
+            ].filter(Boolean);
+
+            for (const c of candidates) {
+                const qrCode = c?.qr_code || c?.qrCode;
+                const qrCodeUrl = c?.qr_code_url || c?.qrCodeUrl;
+                const expiresAt = c?.expires_at || c?.expiresAt;
+
+                if (qrCode || qrCodeUrl) {
+                    return { qr_code: qrCode, qr_code_url: qrCodeUrl, expires_at: expiresAt };
+                }
+            }
+
+            return null;
+        };
+
         if (normalizedPaymentMethod !== 'pix' && normalizedPaymentMethod !== 'credit_card') {
             return jsonError('Método de pagamento inválido');
         }
@@ -48,7 +73,7 @@ export async function POST(req: NextRequest) {
             platform_percentage: feePercentage
         });
 
-        const order = await PagarmeService.createOrder({
+        let pagarmeOrder = await PagarmeService.createOrder({
             amount: product.price,
             payment_method: normalizedPaymentMethod,
             customer: buyer,
@@ -57,8 +82,21 @@ export async function POST(req: NextRequest) {
             platform_fee_percentage: feePercentage
         });
 
-        const charge = order.charges?.[0];
+        const charge = pagarmeOrder.charges?.[0];
         const orderId = uuidv4();
+
+        let pix: { qr_code?: string; qr_code_url?: string; expires_at?: string } | null = null;
+        if (normalizedPaymentMethod === 'pix') {
+            pix = extractPix(pagarmeOrder);
+            if (!pix) {
+                try {
+                    const hydrated = await PagarmeService.getOrder(pagarmeOrder.id);
+                    pix = extractPix(hydrated);
+                    if (pix) pagarmeOrder = hydrated;
+                } catch (e) {
+                }
+            }
+        }
 
         // Save order
         await supabase.from('orders').insert({
@@ -66,7 +104,10 @@ export async function POST(req: NextRequest) {
             buyer_name: buyer.name, buyer_email: buyer.email, buyer_cpf: buyer.cpf,
             amount: product.price, amount_display: product.price_display,
             payment_method: normalizedPaymentMethod, status: charge?.status === 'paid' ? 'paid' : 'pending',
-            pagarme_order_id: order.id, pagarme_charge_id: charge?.id
+            pagarme_order_id: pagarmeOrder.id, pagarme_charge_id: charge?.id,
+            pix_qr_code: pix?.qr_code,
+            pix_qr_code_url: pix?.qr_code_url,
+            pix_expires_at: pix?.expires_at
         });
 
         // Save transaction
@@ -163,25 +204,21 @@ export async function POST(req: NextRequest) {
         }
 
         if (normalizedPaymentMethod === 'pix') {
-            const lastTransaction = charge?.last_transaction;
-            const pixInfo = lastTransaction?.pix || lastTransaction || order.payments?.[0]?.pix;
-
-            console.log('[PAY API] Pix Extraction Debug:', {
-                hasCharge: !!charge,
-                hasLastTransaction: !!lastTransaction,
-                hasPixInfo: !!pixInfo,
-                qrCode: !!pixInfo?.qr_code,
-                qrCodeUrl: !!pixInfo?.qr_code_url
-            });
-
-            if (pixInfo?.qr_code || pixInfo?.qr_code_url) {
+            if (pix?.qr_code || pix?.qr_code_url) {
                 response.pix = {
-                    qr_code: pixInfo.qr_code,
-                    qr_code_url: pixInfo.qr_code_url,
-                    expires_at: pixInfo.expires_at
+                    qr_code: pix.qr_code,
+                    qr_code_url: pix.qr_code_url,
+                    expires_at: pix.expires_at
                 };
             } else {
-                console.error('[PAY API] Pix data NOT found. Full Pagar.me Order:', JSON.stringify(order, null, 2));
+                console.error('[PAY API] Pix data NOT found', JSON.stringify({
+                    pagarme_order_id: pagarmeOrder?.id,
+                    pagarme_status: pagarmeOrder?.status,
+                    has_charges: !!pagarmeOrder?.charges?.length,
+                    charge_status: pagarmeOrder?.charges?.[0]?.status,
+                    has_last_transaction: !!pagarmeOrder?.charges?.[0]?.last_transaction
+                }));
+                return jsonError('O pedido foi gerado, mas o Pagar.me não retornou o QR Code.', 502);
             }
         }
 
