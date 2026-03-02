@@ -119,7 +119,6 @@ export default function LandingPage() {
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 28%, rgba(255,255,255,0) 78%, rgba(255,255,255,1) 100%)',
           pointerEvents: 'none'
         }} />
       </section>
