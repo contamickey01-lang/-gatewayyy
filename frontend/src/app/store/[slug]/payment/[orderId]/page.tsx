@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { FiCopy, FiCheck, FiSmartphone, FiClock, FiShield, FiCheckCircle, FiPackage, FiArrowLeft, FiUser } from 'react-icons/fi';
 import toast from 'react-hot-toast';
@@ -10,15 +10,52 @@ export default function PaymentPage() {
     const params = useParams();
     const router = useRouter();
     const [copied, setCopied] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(86400); // 24 hours in seconds
+    const [timeLeft, setTimeLeft] = useState(0);
     const [order, setOrder] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [paid, setPaid] = useState(false);
+    const pollingRef = useRef<any>(null);
+    const countdownRef = useRef<any>(null);
+    const [countdown, setCountdown] = useState(5);
+
+    const autoLoginAndRedirect = (authData: any) => {
+        if (authData?.token && authData?.user) {
+            localStorage.setItem('token', authData.token);
+            localStorage.setItem('user', JSON.stringify(authData.user));
+        }
+        let count = 5;
+        setCountdown(count);
+        countdownRef.current = setInterval(() => {
+            count--;
+            setCountdown(count);
+            if (count <= 0) {
+                clearInterval(countdownRef.current);
+                router.push('/area-membros');
+            }
+        }, 1000);
+    };
 
     useEffect(() => {
         const loadOrder = async () => {
             try {
                 const { data } = await checkoutAPI.getOrderStatus(params.orderId as string);
                 setOrder(data.order);
+                if (data.order?.payment_method === 'pix') {
+                    const expiresAt = data.order?.pix_expires_at ? new Date(data.order.pix_expires_at).getTime() : null;
+                    if (expiresAt) {
+                        const now = Date.now();
+                        const seconds = Math.max(0, Math.floor((expiresAt - now) / 1000));
+                        setTimeLeft(seconds);
+                    } else if (!timeLeft) {
+                        setTimeLeft(3600);
+                    }
+                }
+
+                if (data.order?.status === 'paid') {
+                    setPaid(true);
+                    toast.success('Pagamento confirmado!');
+                    autoLoginAndRedirect(data.auth);
+                }
             } catch (err) {
                 console.error('Failed to load order:', err);
                 toast.error("Pedido não encontrado");
@@ -31,11 +68,52 @@ export default function PaymentPage() {
     }, [params.orderId]);
 
     useEffect(() => {
+        return () => {
+            if (pollingRef.current) clearInterval(pollingRef.current);
+            if (countdownRef.current) clearInterval(countdownRef.current);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!params.orderId) return;
+        if (!order) return;
+
+        const isTerminal = ['paid', 'failed', 'refunded', 'chargeback', 'cancelled'].includes(order.status);
+        if (isTerminal) return;
+
+        pollingRef.current = setInterval(async () => {
+            try {
+                const { data } = await checkoutAPI.getOrderStatus(params.orderId as string);
+                if (data.order) setOrder(data.order);
+
+                if (data.order?.status === 'paid') {
+                    clearInterval(pollingRef.current);
+                    pollingRef.current = null;
+                    setPaid(true);
+                    toast.success('Pagamento confirmado!');
+                    autoLoginAndRedirect(data.auth);
+                } else if (['failed', 'refunded', 'chargeback', 'cancelled'].includes(data.order?.status)) {
+                    clearInterval(pollingRef.current);
+                    pollingRef.current = null;
+                    toast.error('Pagamento não foi confirmado.');
+                }
+            } catch (err) {
+            }
+        }, 3000);
+
+        return () => {
+            if (pollingRef.current) clearInterval(pollingRef.current);
+        };
+    }, [params.orderId, order?.status]);
+
+    useEffect(() => {
+        if (!order) return;
+        if (order.payment_method !== 'pix') return;
         const timer = setInterval(() => {
             setTimeLeft(prev => Math.max(0, prev - 1));
         }, 1000);
         return () => clearInterval(timer);
-    }, []);
+    }, [order?.payment_method]);
 
     const formatTime = (seconds: number) => {
         const h = Math.floor(seconds / 3600);
@@ -68,6 +146,40 @@ export default function PaymentPage() {
                     <FiPackage size={48} style={{ opacity: 0.3, color: 'white', marginBottom: 16 }} />
                     <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8, color: 'white' }}>Pedido não encontrado</h2>
                     <p style={{ color: '#94a3b8', fontSize: 14 }}>Não conseguimos localizar as informações deste pagamento.</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (paid || order.status === 'paid') {
+        return (
+            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0c', padding: 24 }}>
+                <div style={{ width: '100%', maxWidth: 520, padding: 48, textAlign: 'center', background: '#141417', borderRadius: 24, border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{
+                        width: 80, height: 80, borderRadius: '50%', margin: '0 auto 24px',
+                        background: 'rgba(0,206,201,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    }}>
+                        <FiCheckCircle size={44} style={{ color: '#00cec9' }} />
+                    </div>
+                    <h2 style={{ fontSize: 28, fontWeight: 900, marginBottom: 10, color: 'white' }}>
+                        Pagamento <span style={{ color: '#00cec9' }}>Confirmado!</span>
+                    </h2>
+                    <p style={{ color: '#94a3b8', marginBottom: 18, fontSize: 14 }}>
+                        Seu pagamento foi processado com sucesso.
+                    </p>
+                    <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 16, padding: 18, marginBottom: 22, border: '1px solid rgba(255,255,255,0.05)' }}>
+                        <div style={{ fontSize: 12, color: '#64748b', fontWeight: 700, marginBottom: 6 }}>Valor pago</div>
+                        <div style={{ fontSize: 32, fontWeight: 900, color: '#00cec9' }}>R$ {order.amount_display}</div>
+                    </div>
+                    <button onClick={() => router.push('/area-membros')} style={{
+                        width: '100%', padding: '16px', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                        background: 'white', color: '#0a0a0c', borderRadius: 14, border: 'none', cursor: 'pointer', fontWeight: 900
+                    }}>
+                        <FiUser size={18} /> Acessar área de membros
+                    </button>
+                    <p style={{ color: '#64748b', fontSize: 12, marginTop: 12 }}>
+                        Redirecionando automaticamente em {countdown}s...
+                    </p>
                 </div>
             </div>
         );
