@@ -245,6 +245,30 @@ export default function LandingPage() {
                       border: '1px solid rgba(255,255,255,0.06)'
                     }}
                   />
+
+                  <img
+                    src="https://i.imgur.com/undefined.png"
+                    alt="Prévia adicional da vitrine"
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const img = e.currentTarget as HTMLImageElement;
+                      if (img.dataset.fallback === '2') {
+                        img.style.display = 'none';
+                        return;
+                      }
+                      img.dataset.fallback = '2';
+                      img.src = 'https://imgur.com/undefined';
+                    }}
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      display: 'block',
+                      marginTop: 12,
+                      borderRadius: 18,
+                      border: '1px solid rgba(255,255,255,0.06)'
+                    }}
+                  />
                 </div>
               </div>
             </div>
