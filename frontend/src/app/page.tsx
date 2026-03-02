@@ -10,12 +10,12 @@ export default function LandingPage() {
       {/* Header */}
       <header style={{
         position: 'fixed',
-        top: 14,
+        top: 'max(14px, env(safe-area-inset-top))',
         left: 0,
         right: 0,
         zIndex: 50
       }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+        <div className="landingHeaderContainer" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
           <div style={{ maxWidth: 1040, margin: '0 auto' }}>
             <div style={{
               display: 'flex',
@@ -27,13 +27,13 @@ export default function LandingPage() {
               background: 'rgba(255,255,255,0.82)',
               backdropFilter: 'blur(18px)',
               boxShadow: '0 14px 44px rgba(17, 24, 39, 0.10)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+            }} className="landingHeaderBar">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }} className="landingLogo">
                 <img src="/logo.png" alt="GouPay Logo" style={{ width: 44, height: 44, objectFit: 'contain', flexShrink: 0 }} />
-                <span style={{ fontSize: 18, fontWeight: 800 }}>Gou<span className="gradient-text">Pay</span></span>
+                <span style={{ fontSize: 18, fontWeight: 800 }} className="landingLogoText">Gou<span className="gradient-text">Pay</span></span>
               </div>
 
-              <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+              <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }} className="landingHeaderCenter">
                 <nav style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -42,7 +42,7 @@ export default function LandingPage() {
                   borderRadius: 999,
                   border: '1px solid rgba(108,92,231,0.14)',
                   background: 'rgba(255,255,255,0.70)'
-                }}>
+                }} className="landingNav">
                   {[
                     { href: '#inicio', label: 'Início' },
                     { href: '#features', label: 'Recursos' },
@@ -67,7 +67,7 @@ export default function LandingPage() {
                 </nav>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }} className="landingActions">
                 <Link
                   href="/login"
                   style={{
@@ -93,7 +93,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: 'var(--bg-primary)' }}>
+      <section style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: 'var(--bg-primary)' }} className="landingHero">
         <img
           src="https://i.imgur.com/oo0BV2x.png"
           alt=""
@@ -115,12 +115,8 @@ export default function LandingPage() {
             objectPosition: 'center',
             display: 'block'
           }}
+          className="landingHeroImg"
         />
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          pointerEvents: 'none'
-        }} />
       </section>
 
       {/* Features */}

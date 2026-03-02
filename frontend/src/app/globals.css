@@ -377,3 +377,45 @@ body {
   background: rgba(108, 92, 231, 0.15);
   color: var(--accent-secondary);
 }
+
+@media (max-width: 768px) {
+  .landingHeaderContainer {
+    padding: 0 14px !important;
+  }
+
+  .landingHeaderBar {
+    gap: 10px !important;
+    padding: 8px 10px !important;
+  }
+
+  .landingHeaderCenter {
+    display: none !important;
+  }
+
+  .landingLogo img {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .landingLogoText {
+    font-size: 16px !important;
+  }
+
+  .landingActions a {
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+  }
+
+  .landingActions .btn-primary {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+
+  .landingHero {
+    height: 100svh !important;
+  }
+
+  .landingHeroImg {
+    object-fit: cover !important;
+  }
+}
