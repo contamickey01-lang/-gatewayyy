@@ -6,12 +6,13 @@ import { FiArrowRight, FiZap, FiLock, FiTrendingUp } from 'react-icons/fi';
 
 export default function LandingPage() {
   return (
-    <div style={{ background: 'var(--bg-primary)', minHeight: '100vh' }}>
+    <div className="force-light" style={{ background: 'var(--bg-primary)', minHeight: '100vh' }}>
       {/* Header */}
       <header style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-        background: 'rgba(10, 10, 15, 0.85)', backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(42, 42, 58, 0.3)',
+        background: 'var(--header-bg)', backdropFilter: 'blur(20px)',
+        borderBottom: '1px solid var(--border-color)',
+        boxShadow: '0 8px 24px rgba(17, 24, 39, 0.06)'
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -164,8 +165,8 @@ export default function LandingPage() {
                     gap: 12,
                     padding: 16,
                     borderRadius: 16,
-                    border: '1px solid rgba(255,255,255,0.06)',
-                    background: 'rgba(10,10,15,0.35)'
+                    border: '1px solid var(--border-color)',
+                    background: 'rgba(255,255,255,0.75)'
                   }}>
                     <div style={{
                       width: 34,
@@ -201,18 +202,18 @@ export default function LandingPage() {
             <div style={{ position: 'relative' }}>
               <div style={{
                 borderRadius: 22,
-                border: '1px solid rgba(255,255,255,0.08)',
-                background: 'linear-gradient(180deg, rgba(20,20,28,0.75) 0%, rgba(10,10,15,0.65) 100%)',
+                border: '1px solid var(--border-color)',
+                background: 'linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(243,244,246,0.92) 100%)',
                 overflow: 'hidden',
-                boxShadow: '0 24px 80px rgba(0,0,0,0.45)'
+                boxShadow: '0 24px 80px rgba(17, 24, 39, 0.14)'
               }}>
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   padding: '14px 16px',
-                  borderBottom: '1px solid rgba(255,255,255,0.06)',
-                  background: 'rgba(10,10,15,0.35)'
+                  borderBottom: '1px solid var(--border-color)',
+                  background: 'rgba(255,255,255,0.75)'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ width: 10, height: 10, borderRadius: 999, background: 'rgba(255,107,107,0.9)' }} />
@@ -242,7 +243,7 @@ export default function LandingPage() {
                       height: 'auto',
                       display: 'block',
                       borderRadius: 18,
-                      border: '1px solid rgba(255,255,255,0.06)'
+                      border: '1px solid var(--border-color)'
                     }}
                   />
 
@@ -263,7 +264,7 @@ export default function LandingPage() {
                       display: 'block',
                       marginTop: 12,
                       borderRadius: 18,
-                      border: '1px solid rgba(255,255,255,0.06)'
+                      border: '1px solid var(--border-color)'
                     }}
                   />
                 </div>

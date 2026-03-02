@@ -22,6 +22,27 @@
   --header-bg: rgba(255, 255, 255, 0.85);
 }
 
+.force-light {
+  color-scheme: light;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f9fafb;
+  --border-color: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --accent-primary: #8e44ad;
+  --accent-secondary: #a29bfe;
+  --accent-gradient: linear-gradient(135deg, #8e44ad 0%, #9b59b6 50%, #a29bfe 100%);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --header-bg: rgba(255, 255, 255, 0.85);
+}
+
 .dark {
   --bg-primary: #0a0a0f;
   --bg-secondary: #111118;
