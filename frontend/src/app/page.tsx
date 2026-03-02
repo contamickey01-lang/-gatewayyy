@@ -212,7 +212,7 @@ export default function LandingPage() {
                     inset: 0,
                     background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.18) 55%, rgba(255,255,255,0.42) 100%)'
                   }} />
-                }} />
+                </div>
               </div>
 
               <div className="gradient-border" style={{
