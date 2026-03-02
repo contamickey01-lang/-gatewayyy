@@ -175,7 +175,10 @@ export default function LandingPage() {
                 inset: -56,
                 pointerEvents: 'none',
                 zIndex: 0,
-                opacity: 0.55
+                borderRadius: 28,
+                overflow: 'hidden',
+                border: '1px solid rgba(108,92,231,0.14)',
+                boxShadow: '0 28px 90px rgba(108,92,231,0.10)'
               }}>
                 <img
                   src="https://i.imgur.com/XmXBuoi.png"
@@ -193,21 +196,22 @@ export default function LandingPage() {
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
-                    borderRadius: 28,
+                    opacity: 0.72,
                     filter: 'saturate(1.05) contrast(1.02)'
                   }}
                 />
                 <div style={{
                   position: 'absolute',
                   inset: 0,
-                  borderRadius: 28,
-                  background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.85) 55%, rgba(255,255,255,1) 80%)'
-                }} />
-                <div style={{
-                  position: 'absolute',
-                  inset: 0,
-                  borderRadius: 28,
-                  background: 'linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.98) 68%)'
+                  background: 'rgba(255,255,255,0.38)',
+                  backdropFilter: 'blur(22px)',
+                  WebkitBackdropFilter: 'blur(22px)'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.18) 55%, rgba(255,255,255,0.42) 100%)'
+                  }} />
                 }} />
               </div>
 
