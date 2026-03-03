@@ -416,7 +416,7 @@ body {
   }
 
   .landingHeroImg {
-    object-fit: cover !important;
+    object-fit: contain !important;
   }
 
   .landingStorefrontSection {

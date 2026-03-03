@@ -93,7 +93,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: 'var(--bg-primary)' }} className="landingHero">
+      <section style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: '#0a0a0f' }} className="landingHero">
         <img
           src="https://i.imgur.com/wjppcWE.png"
           alt=""
@@ -112,7 +112,7 @@ export default function LandingPage() {
             inset: 0,
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
+            objectFit: 'contain',
             objectPosition: 'center',
             display: 'block'
           }}
