@@ -198,22 +198,6 @@ export default function LandingPage() {
                   Crie sua loja, publique seus produtos e acompanhe as vendas em tempo real. Tudo no mesmo lugar, com experiência de compra rápida e segura.
                 </p>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 18 }} className="landingHeroBullets">
-                  {[
-                    { icon: <FiLock size={16} />, text: 'Antifraude + SSL' },
-                    { icon: <FiZap size={16} />, text: 'Pix instantâneo' },
-                    { icon: <HiOutlineLightningBolt size={16} />, text: 'Entrega automática' },
-                    { icon: <HiOutlineChartBar size={16} />, text: 'Métricas em tempo real' },
-                  ].map((item, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 14, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.86)', fontSize: 13, fontWeight: 700 }}>
-                      <span style={{ width: 28, height: 28, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(108,92,231,0.16)', color: 'white', flexShrink: 0 }}>
-                        {item.icon}
-                      </span>
-                      <span>{item.text}</span>
-                    </div>
-                  ))}
-                </div>
-
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }} className="landingHeroActions">
                   <Link href="/register" className="btn-primary" style={{ padding: '14px 20px', fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 8, borderRadius: 999 }}>
                     Criar conta grátis <FiArrowRight size={16} />
@@ -629,29 +613,29 @@ export default function LandingPage() {
             }
             .landingHeroInner {
               align-items: center !important;
-              padding-top: calc(env(safe-area-inset-top) + 96px);
-              padding-bottom: 26px;
+              padding-top: calc(env(safe-area-inset-top) + 112px);
+              padding-bottom: 22px;
             }
             .landingHeroCard {
-              padding: 18px !important;
+              padding: 16px !important;
             }
             .landingHeroTitle {
-              font-size: 28px !important;
+              font-size: 26px !important;
             }
             .landingHeroSubtitle {
               font-size: 14px !important;
-              margin-bottom: 14px !important;
+              margin-bottom: 12px !important;
             }
             .landingHeroBullets {
               grid-template-columns: 1fr !important;
             }
             .landingHeroBullets > div {
-              padding: 9px 10px !important;
+              padding: 8px 10px !important;
               font-size: 12px !important;
             }
             .landingHeroActions a {
-              padding: 12px 16px !important;
-              font-size: 13px !important;
+              padding: 11px 14px !important;
+              font-size: 12.5px !important;
             }
           }
           @media (max-width: 980px) {
