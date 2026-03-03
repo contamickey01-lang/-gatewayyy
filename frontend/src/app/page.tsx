@@ -93,7 +93,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: '#0a0a0f' }} className="landingHero">
+      <section style={{ position: 'relative', height: 'clamp(520px, 78vh, 820px)', overflow: 'hidden', background: '#0a0a0f' }} className="landingHero">
         <picture style={{ position: 'absolute', inset: 0 }}>
           <source media="(max-width: 768px)" srcSet="https://i.imgur.com/wXmNNSd.png" />
           <img
