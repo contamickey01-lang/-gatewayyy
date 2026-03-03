@@ -24,7 +24,7 @@ export default function TermsSalesPage() {
             Termos de Venda — <span className="gradient-text">GouPay</span>
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.8, marginBottom: 12 }}>
-            Este documento descreve condições para Vendedores que utilizam a GouPay para criar checkouts e vender produtos.
+            Este documento descreve condições para Vendedores que utilizam a GouPay para criar checkouts, anunciar produtos e receber por vendas.
           </p>
           <p style={{ color: 'var(--text-muted)', fontSize: 12, marginBottom: 0 }}>
             Última atualização: 03/03/2026
@@ -37,6 +37,7 @@ export default function TermsSalesPage() {
           <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 12 }}>1. Cadastro e conformidade</h2>
           <div style={{ display: 'grid', gap: 12, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.8 }}>
             <div>O Vendedor deve fornecer informações corretas e manter dados atualizados, incluindo dados de recebimento quando aplicável.</div>
+            <div>O Vendedor é responsável pela guarda de credenciais de acesso e por atividades realizadas em sua conta.</div>
             <div>A GouPay pode realizar verificações de identidade, validações e análises de risco para prevenção a fraudes e cumprimento de obrigações legais.</div>
           </div>
         </div>
@@ -44,7 +45,7 @@ export default function TermsSalesPage() {
         <div style={{ height: 18 }} />
 
         <div className="glass-card" style={{ padding: 28 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 12 }}>2. Produtos e oferta</h2>
+          <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 12 }}>2. Produtos, oferta e transparência</h2>
           <div style={{ display: 'grid', gap: 12, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.8 }}>
             <div>O Vendedor é o responsável pelo conteúdo, qualidade, preço, promessa e entrega do Produto.</div>
             <div>O anúncio e o checkout devem conter informações claras sobre o que está sendo vendido, prazos, regras de acesso, suporte e reembolsos.</div>
@@ -55,11 +56,12 @@ export default function TermsSalesPage() {
         <div style={{ height: 18 }} />
 
         <div className="glass-card" style={{ padding: 28 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 12 }}>3. Pagamentos, taxas e repasses</h2>
+          <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 12 }}>3. Checkout, pagamentos e repasses</h2>
           <div style={{ display: 'grid', gap: 12, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.8 }}>
             <div>As taxas e prazos de repasse podem variar conforme método de pagamento, risco transacional e políticas operacionais.</div>
             <div>O Vendedor deve considerar possíveis estornos/contestações e manter boa comunicação com Compradores.</div>
-            <div>Transações podem ser bloqueadas temporariamente para validações, investigações de fraude ou exigências legais.</div>
+            <div>Transações podem ser bloqueadas temporariamente para validações, investigações de fraude, disputas ou exigências legais/operacionais.</div>
+            <div>O Vendedor é responsável por obrigações fiscais e legais aplicáveis às suas vendas, conforme seu domicílio e natureza do Produto.</div>
           </div>
         </div>
 
@@ -77,7 +79,18 @@ export default function TermsSalesPage() {
         <div style={{ height: 18 }} />
 
         <div className="glass-card" style={{ padding: 28 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 12 }}>5. Suporte e comunicação</h2>
+          <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 12 }}>5. Reembolsos e disputas</h2>
+          <div style={{ display: 'grid', gap: 12, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.8 }}>
+            <div>O Vendedor deve seguir as regras de reembolso divulgadas na oferta e cumprir a legislação aplicável.</div>
+            <div>Em disputas, o Vendedor pode ser solicitado a fornecer informações e evidências de entrega/acesso.</div>
+            <div>Quando houver chargebacks/contestações, valores podem ser debitados do saldo e/ou retidos conforme necessário.</div>
+          </div>
+        </div>
+
+        <div style={{ height: 18 }} />
+
+        <div className="glass-card" style={{ padding: 28 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 12 }}>6. Suporte e comunicação</h2>
           <div style={{ color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.8 }}>
             O Vendedor deve manter canal de suporte para Compradores e responder solicitações dentro de prazo razoável. A GouPay pode solicitar informações sobre entregas, reembolsos e disputas quando necessário.
           </div>
@@ -86,4 +99,3 @@ export default function TermsSalesPage() {
     </div>
   );
 }
-

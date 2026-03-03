@@ -38,6 +38,7 @@ export default function TermsContentPolicyPage() {
           <div style={{ display: 'grid', gap: 12, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.8 }}>
             <div>Produtos e serviços lícitos, com descrição clara e entrega compatível com o que foi ofertado.</div>
             <div>Conteúdos digitais, comunidades, cursos e consultorias, desde que respeitem direitos autorais e regras de consumo.</div>
+            <div>Materiais educativos e informativos, desde que não envolvam promessas enganosas ou orientações ilegais.</div>
           </div>
         </div>
 
@@ -51,6 +52,7 @@ export default function TermsContentPolicyPage() {
             <div>Conteúdo que promova ódio, discriminação, violência, assédio, exploração ou ameaças.</div>
             <div>Itens/serviços restritos por lei sem as devidas autorizações e comprovações aplicáveis.</div>
             <div>Coleta indevida de dados pessoais, phishing, malware, engenharia social, ou qualquer forma de abuso tecnológico.</div>
+            <div>Produtos com promessas falsas, garantias absolutas, resultados inevitáveis ou que omitam informações relevantes para a decisão do Comprador.</div>
           </div>
         </div>
 
@@ -61,13 +63,14 @@ export default function TermsContentPolicyPage() {
           <div style={{ display: 'grid', gap: 12, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.8 }}>
             <div>O Vendedor deve evitar promessas absolutas e garantir que anúncios sejam verificáveis e coerentes com o Produto.</div>
             <div>É obrigatório informar claramente prazos, regras de acesso, o que está incluso, limitações e políticas de suporte.</div>
+            <div>Antes/depois, depoimentos e prints devem ser apresentados de forma honesta e sem manipulação ou omissão de contexto.</div>
           </div>
         </div>
 
         <div style={{ height: 18 }} />
 
         <div className="glass-card" style={{ padding: 28 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 12 }}>4. Moderação e medidas</h2>
+          <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 12 }}>4. Moderação, revisão e medidas</h2>
           <div style={{ display: 'grid', gap: 12, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.8 }}>
             <div>Podemos revisar ofertas e materiais a qualquer momento, inclusive de forma preventiva, para reduzir risco e manter a segurança.</div>
             <div>Em caso de violação, podemos remover páginas, suspender checkouts, limitar recursos e/ou encerrar contas, conforme a gravidade.</div>
@@ -87,4 +90,3 @@ export default function TermsContentPolicyPage() {
     </div>
   );
 }
-
