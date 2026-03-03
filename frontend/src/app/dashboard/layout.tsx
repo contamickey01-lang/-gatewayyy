@@ -6,6 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { FiHome, FiPackage, FiDollarSign, FiSettings, FiLogOut, FiMenu, FiX, FiPercent, FiBookOpen, FiUser, FiMessageCircle, FiShoppingBag } from 'react-icons/fi';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { dashboardAPI } from '@/lib/api';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -13,6 +14,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const [user, setUser] = useState<any>(null);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
+    const [salesStats, setSalesStats] = useState<{ available: number; pending: number } | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
     const avatarRef = useRef<HTMLButtonElement>(null);
 
@@ -25,6 +27,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         }
         setUser(JSON.parse(userData));
     }, [router]);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const parseMoney = (v: any) => {
+            const n = typeof v === 'number' ? v : parseFloat(String(v ?? '0').replace(',', '.'));
+            return Number.isFinite(n) ? n : 0;
+        };
+
+        const load = async () => {
+            try {
+                const { data } = await dashboardAPI.getStats();
+                if (cancelled) return;
+                const available = parseMoney(data?.stats?.available_balance);
+                const pending = parseMoney(data?.stats?.pending_balance);
+                setSalesStats({ available, pending });
+            } catch {
+                if (!cancelled) setSalesStats(null);
+            }
+        };
+
+        load();
+        const id = window.setInterval(load, 8000);
+        return () => {
+            cancelled = true;
+            window.clearInterval(id);
+        };
+    }, []);
 
     // Close profile dropdown on click outside
     useEffect(() => {
@@ -57,6 +87,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     ];
 
     if (!user) return null;
+
+    const available = salesStats?.available ?? 0;
+    const pending = salesStats?.pending ?? 0;
+    const total = available + pending;
+    const pct = total > 0 ? Math.max(0, Math.min(100, (available / total) * 100)) : 0;
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-primary)' }}>
@@ -122,37 +157,50 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <main style={{ flex: 1, paddingLeft: 260, minHeight: '100vh', overflowX: 'hidden' }}>
                 {/* Top bar */}
                 <header style={{
-                    padding: '16px 32px', borderBottom: '1px solid var(--border-color)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    borderBottom: '1px solid var(--border-color)',
                     background: 'var(--header-bg)', backdropFilter: 'blur(10px)',
                     position: 'sticky', top: 0, zIndex: 30
                 }} className="dashboard-topbar">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }} className="dashboard-topbar-left">
-                        <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{
-                            display: 'none', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer'
-                        }} className="mobile-menu-btn">
-                            {sidebarOpen ? <FiX size={22} /> : <FiMenu size={22} />}
-                        </button>
-                        <h2 style={{ fontSize: 18, fontWeight: 600, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} className="dashboard-topbar-title">
-                            {navItems.find(n => n.href === pathname)?.label || 'Dashboard'}
-                        </h2>
+                    <div style={{ padding: '16px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }} className="dashboard-topbar-row">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }} className="dashboard-topbar-left">
+                            <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{
+                                display: 'none', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer'
+                            }} className="mobile-menu-btn">
+                                {sidebarOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+                            </button>
+                            <h2 style={{ fontSize: 18, fontWeight: 600, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} className="dashboard-topbar-title">
+                                {navItems.find(n => n.href === pathname)?.label || 'Dashboard'}
+                            </h2>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }} className="dashboard-topbar-right">
+                            <div className="dashboard-theme-toggle">
+                                <ThemeToggle />
+                            </div>
+                            <span className="badge badge-success dashboard-online-badge" style={{ fontSize: 11 }}>Online</span>
+                            <button ref={avatarRef} onClick={() => setProfileOpen(!profileOpen)} style={{
+                                width: 38, height: 38, borderRadius: '50%', background: 'var(--accent-gradient)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: 15, fontWeight: 700, color: 'white', border: '2px solid transparent',
+                                cursor: 'pointer', transition: 'all 0.2s',
+                                outline: profileOpen ? '2px solid var(--accent-primary)' : 'none',
+                                outlineOffset: 2
+                            }} className="dashboard-avatar-btn">
+                                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                            </button>
+                        </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }} className="dashboard-topbar-right">
-                        <div className="dashboard-theme-toggle">
-                            <ThemeToggle />
+                    <div style={{ padding: '0 32px 12px' }} className="dashboard-sales-progress">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 8 }} className="dashboard-sales-progress-labels">
+                            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>Progresso de Vendas</div>
+                            <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>
+                                R$ {available.toFixed(2)} / R$ {total.toFixed(2)} ({pct.toFixed(0)}%)
+                            </div>
                         </div>
-                        <span className="badge badge-success dashboard-online-badge" style={{ fontSize: 11 }}>Online</span>
-                        <button ref={avatarRef} onClick={() => setProfileOpen(!profileOpen)} style={{
-                            width: 38, height: 38, borderRadius: '50%', background: 'var(--accent-gradient)',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: 15, fontWeight: 700, color: 'white', border: '2px solid transparent',
-                            cursor: 'pointer', transition: 'all 0.2s',
-                            outline: profileOpen ? '2px solid var(--accent-primary)' : 'none',
-                            outlineOffset: 2
-                        }} className="dashboard-avatar-btn">
-                            {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                        </button>
+                        <div style={{ height: 10, borderRadius: 999, background: 'rgba(108,92,231,0.14)', overflow: 'hidden' }}>
+                            <div style={{ height: '100%', width: `${pct}%`, background: 'var(--accent-gradient)', transition: 'width 0.35s ease' }} />
+                        </div>
                     </div>
                 </header>
 
@@ -219,12 +267,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           main { padding-left: 0 !important; }
           .mobile-overlay { display: block !important; }
           .mobile-menu-btn { display: block !important; }
-          .dashboard-topbar { padding: 12px 14px !important; gap: 12px; }
+          .dashboard-topbar-row { padding: 12px 14px !important; }
           .dashboard-topbar-left { gap: 10px; }
           .dashboard-topbar-title { font-size: 16px !important; }
           .dashboard-topbar-right { gap: 10px; }
           .dashboard-theme-toggle { transform: scale(0.92); transform-origin: right center; }
           .dashboard-avatar-btn { width: 34px !important; height: 34px !important; font-size: 14px !important; }
+          .dashboard-sales-progress { padding: 0 14px 12px !important; }
         }
         @media (max-width: 420px) {
           .dashboard-online-badge { display: none !important; }
