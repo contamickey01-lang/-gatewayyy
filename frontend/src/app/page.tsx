@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { HiOutlineShieldCheck, HiOutlineCreditCard, HiOutlineCurrencyDollar, HiOutlineChartBar, HiOutlineLightningBolt, HiOutlineGlobeAlt } from 'react-icons/hi';
-import { FiArrowRight, FiZap, FiLock, FiTrendingUp } from 'react-icons/fi';
+import { FiArrowRight, FiZap, FiLock, FiTrendingUp, FiInstagram, FiYoutube, FiMessageCircle } from 'react-icons/fi';
 
 export default function LandingPage() {
   return (
@@ -340,14 +340,125 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer id="footer" style={{
-        borderTop: '1px solid var(--border-color)', padding: '40px 24px',
-        textAlign: 'center', color: 'var(--text-muted)', fontSize: 13
+        borderTop: '1px solid rgba(255,255,255,0.08)',
+        background: 'radial-gradient(ellipse at top, rgba(108,92,231,0.28) 0%, rgba(10,10,12,1) 55%)',
+        padding: '54px 24px 26px',
+        color: 'rgba(255,255,255,0.82)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 16 }}>
-          <img src="/logo.png" alt="GouPay Logo" style={{ width: 48, height: 48, objectFit: 'contain', flexShrink: 0 }} />
-          <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-secondary)' }}>GouPay</span>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+            gap: 28,
+            alignItems: 'start',
+            marginBottom: 26
+          }} className="landingFooterGrid">
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                <img src="/logo.png" alt="GouPay Logo" style={{ width: 44, height: 44, objectFit: 'contain', flexShrink: 0 }} />
+                <span style={{ fontSize: 18, fontWeight: 800, color: 'white' }}>
+                  Gou<span className="gradient-text">Pay</span>
+                </span>
+              </div>
+              <p style={{ color: 'rgba(255,255,255,0.68)', fontSize: 13, lineHeight: 1.7, maxWidth: 320 }}>
+                Gateway de pagamentos + loja integrada para você vender com experiência premium, com foco em simplicidade e conversão.
+              </p>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: 0.8, color: 'rgba(255,255,255,0.62)', marginBottom: 12, textTransform: 'uppercase' }}>Institucional</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13 }}>
+                <Link href="#inicio" style={{ color: 'rgba(255,255,255,0.82)', textDecoration: 'none' }}>Como a GouPay</Link>
+                <Link href="#features" style={{ color: 'rgba(255,255,255,0.82)', textDecoration: 'none' }}>Central de Ajuda</Link>
+                <a href="https://wa.me/5532998284648?text=Ol%C3%A1!%20Preciso%20de%20ajuda%20com%20a%20plataforma%20GouPay." target="_blank" rel="noreferrer" style={{ color: 'rgba(255,255,255,0.82)', textDecoration: 'none' }}>
+                  Fale com a gente
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: 0.8, color: 'rgba(255,255,255,0.62)', marginBottom: 12, textTransform: 'uppercase' }}>Termos e Condições de Uso</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13 }}>
+                <Link href="/terms/use" style={{ color: 'rgba(255,255,255,0.82)', textDecoration: 'none' }}>Termos de Uso</Link>
+                <Link href="/terms/purchase" style={{ color: 'rgba(255,255,255,0.82)', textDecoration: 'none' }}>Termos de Compra</Link>
+                <Link href="/terms/sales" style={{ color: 'rgba(255,255,255,0.82)', textDecoration: 'none' }}>Termos de Venda</Link>
+                <Link href="/terms/content-policy" style={{ color: 'rgba(255,255,255,0.82)', textDecoration: 'none' }}>Política de Conteúdo</Link>
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: 0.8, color: 'rgba(255,255,255,0.62)', marginBottom: 12, textTransform: 'uppercase' }}>Baixe nosso app</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 10 }}>
+                <div style={{
+                  padding: '12px 14px',
+                  borderRadius: 14,
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  background: 'rgba(255,255,255,0.04)',
+                  color: 'rgba(255,255,255,0.86)',
+                  fontWeight: 800,
+                  fontSize: 13,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                  <span>Google Play</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, opacity: 0.7 }}>Em breve</span>
+                </div>
+                <div style={{
+                  padding: '12px 14px',
+                  borderRadius: 14,
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  background: 'rgba(255,255,255,0.04)',
+                  color: 'rgba(255,255,255,0.86)',
+                  fontWeight: 800,
+                  fontSize: 13,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                  <span>App Store</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, opacity: 0.7 }}>Em breve</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.10)', margin: '18px 0 18px' }} />
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }} className="landingFooterBottom">
+            <div style={{ color: 'rgba(255,255,255,0.62)', fontSize: 12, fontWeight: 600 }}>
+              © {new Date().getFullYear()} GouPay. Todos os direitos reservados.
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <a href="https://wa.me/5532998284648?text=Ol%C3%A1!%20Quero%20falar%20com%20a%20GouPay." target="_blank" rel="noreferrer" style={{ color: 'rgba(255,255,255,0.82)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)' }}>
+                <FiMessageCircle size={16} />
+              </a>
+              <a href="#" style={{ color: 'rgba(255,255,255,0.82)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)' }}>
+                <FiInstagram size={16} />
+              </a>
+              <a href="#" style={{ color: 'rgba(255,255,255,0.82)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)' }}>
+                <FiYoutube size={16} />
+              </a>
+            </div>
+          </div>
         </div>
-        © {new Date().getFullYear()} GouPay. Todos os direitos reservados.
+
+        <style jsx global>{`
+          @media (max-width: 980px) {
+            .landingFooterGrid {
+              grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+          }
+          @media (max-width: 520px) {
+            .landingFooterGrid {
+              grid-template-columns: 1fr !important;
+            }
+            .landingFooterBottom {
+              justify-content: center !important;
+              text-align: center;
+            }
+          }
+        `}</style>
       </footer>
     </div>
   );
