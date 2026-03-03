@@ -126,18 +126,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     background: 'var(--header-bg)', backdropFilter: 'blur(10px)',
                     position: 'sticky', top: 0, zIndex: 30
-                }}>
-                    <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{
-                        display: 'none', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer'
-                    }} className="mobile-menu-btn">
-                        {sidebarOpen ? <FiX size={22} /> : <FiMenu size={22} />}
-                    </button>
-                    <h2 style={{ fontSize: 18, fontWeight: 600 }}>
-                        {navItems.find(n => n.href === pathname)?.label || 'Dashboard'}
-                    </h2>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }}>
-                        <ThemeToggle />
-                        <span className="badge badge-success" style={{ fontSize: 11 }}>Online</span>
+                }} className="dashboard-topbar">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }} className="dashboard-topbar-left">
+                        <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{
+                            display: 'none', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer'
+                        }} className="mobile-menu-btn">
+                            {sidebarOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+                        </button>
+                        <h2 style={{ fontSize: 18, fontWeight: 600, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} className="dashboard-topbar-title">
+                            {navItems.find(n => n.href === pathname)?.label || 'Dashboard'}
+                        </h2>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }} className="dashboard-topbar-right">
+                        <div className="dashboard-theme-toggle">
+                            <ThemeToggle />
+                        </div>
+                        <span className="badge badge-success dashboard-online-badge" style={{ fontSize: 11 }}>Online</span>
                         <button ref={avatarRef} onClick={() => setProfileOpen(!profileOpen)} style={{
                             width: 38, height: 38, borderRadius: '50%', background: 'var(--accent-gradient)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -145,7 +150,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             cursor: 'pointer', transition: 'all 0.2s',
                             outline: profileOpen ? '2px solid var(--accent-primary)' : 'none',
                             outlineOffset: 2
-                        }}>
+                        }} className="dashboard-avatar-btn">
                             {user?.name?.charAt(0)?.toUpperCase() || 'U'}
                         </button>
                     </div>
@@ -214,6 +219,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           main { padding-left: 0 !important; }
           .mobile-overlay { display: block !important; }
           .mobile-menu-btn { display: block !important; }
+          .dashboard-topbar { padding: 12px 14px !important; gap: 12px; }
+          .dashboard-topbar-left { gap: 10px; }
+          .dashboard-topbar-title { font-size: 16px !important; }
+          .dashboard-topbar-right { gap: 10px; }
+          .dashboard-theme-toggle { transform: scale(0.92); transform-origin: right center; }
+          .dashboard-avatar-btn { width: 34px !important; height: 34px !important; font-size: 14px !important; }
+        }
+        @media (max-width: 420px) {
+          .dashboard-online-badge { display: none !important; }
         }
         .profile-menu-item:hover {
           background: rgba(255,255,255,0.06) !important;
