@@ -184,7 +184,7 @@ export default function LandingPage() {
         </picture>
         <div style={{ position: 'absolute', inset: 0, zIndex: 4, pointerEvents: 'none' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto', height: '100%', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} className="landingHeroInner">
-            <div style={{ width: 'min(520px, 100%)', pointerEvents: 'auto', transform: 'translateX(80px)' }} className="landingHeroCopy">
+            <div style={{ width: 'min(520px, 100%)', pointerEvents: 'auto', transform: 'translateX(180px)' }} className="landingHeroCopy">
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 14px', borderRadius: 999, background: 'rgba(0,206,201,0.12)', border: '1px solid rgba(0,206,201,0.18)', color: '#00cec9', fontSize: 12, fontWeight: 800, letterSpacing: 0.4, marginBottom: 14 }}>
                 <FiTrendingUp size={16} />
                 Aumente sua conversão hoje
