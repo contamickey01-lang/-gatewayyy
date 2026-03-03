@@ -607,7 +607,8 @@ export default function LandingPage() {
             }
           }
           .landingHeroInner {
-            padding-top: 120px;
+            padding-top: calc(env(safe-area-inset-top) + 120px);
+            padding-bottom: 18px;
             box-sizing: border-box;
           }
           @media (max-width: 980px) {
@@ -622,18 +623,35 @@ export default function LandingPage() {
             }
           }
           @media (max-width: 640px) {
+            .landingHero {
+              height: auto !important;
+              min-height: 100svh;
+            }
             .landingHeroInner {
-              align-items: flex-end !important;
-              padding-bottom: 22px;
+              align-items: center !important;
+              padding-top: calc(env(safe-area-inset-top) + 96px);
+              padding-bottom: 26px;
             }
             .landingHeroCard {
               padding: 18px !important;
             }
             .landingHeroTitle {
-              font-size: 30px !important;
+              font-size: 28px !important;
+            }
+            .landingHeroSubtitle {
+              font-size: 14px !important;
+              margin-bottom: 14px !important;
             }
             .landingHeroBullets {
               grid-template-columns: 1fr !important;
+            }
+            .landingHeroBullets > div {
+              padding: 9px 10px !important;
+              font-size: 12px !important;
+            }
+            .landingHeroActions a {
+              padding: 12px 16px !important;
+              font-size: 13px !important;
             }
           }
           @media (max-width: 980px) {
