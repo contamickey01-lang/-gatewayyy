@@ -120,7 +120,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </aside>
 
             {/* Main content */}
-            <main style={{ flex: 1, marginLeft: 260, minHeight: '100vh' }}>
+            <main style={{ flex: 1, paddingLeft: 260, minHeight: '100vh', overflowX: 'hidden' }}>
                 {/* Top bar */}
                 <header style={{
                     padding: '16px 32px', borderBottom: '1px solid var(--border-color)',
@@ -212,7 +212,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       @media (max-width: 768px) {
           aside { transform: translateX(-100%) !important; }
           aside[style*="translateX(0)"] { transform: translateX(0) !important; }
-          main { margin-left: 0 !important; }
+          main { padding-left: 0 !important; }
           .mobile-overlay { display: block !important; }
           .mobile-menu-btn { display: block !important; }
         }

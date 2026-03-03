@@ -74,7 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </div>
             </aside>
 
-            <main style={{ flex: 1, marginLeft: 260, minHeight: '100vh' }}>
+            <main style={{ flex: 1, paddingLeft: 260, minHeight: '100vh', overflowX: 'hidden' }}>
                 <header style={{
                     padding: '16px 32px', borderBottom: '1px solid var(--border-color)',
                     background: 'var(--header-bg)', backdropFilter: 'blur(10px)',
@@ -91,6 +91,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </header>
                 <div style={{ padding: 32 }}>{children}</div>
             </main>
+
+            <style jsx global>{`
+        @media (max-width: 768px) {
+          aside { display: none !important; }
+          main { padding-left: 0 !important; }
+        }
+      `}</style>
         </div>
     );
 }
