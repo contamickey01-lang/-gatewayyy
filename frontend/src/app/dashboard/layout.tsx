@@ -72,9 +72,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <aside style={{
                 width: 260, background: 'var(--bg-secondary)', borderRight: '1px solid var(--border-color)',
                 display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, bottom: 0, left: 0, zIndex: 50,
-                transform: sidebarOpen ? 'translateX(0)' : undefined,
                 transition: 'transform 0.3s ease',
-            }}>
+            }} className={`dashboard-aside${sidebarOpen ? ' open' : ''}`}>
                 {/* Logo */}
                 <div style={{ padding: '24px 20px', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: 10 }}>
                     <img src="/logo.png" alt="GouPay Logo" style={{ width: 56, height: 56, objectFit: 'contain', flexShrink: 0 }} />
@@ -210,8 +209,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             <style jsx global>{`
       @media (max-width: 768px) {
-          aside { transform: translateX(-100%) !important; }
-          aside[style*="translateX(0)"] { transform: translateX(0) !important; }
+          .dashboard-aside { transform: translateX(-100%) !important; }
+          .dashboard-aside.open { transform: translateX(0) !important; }
           main { padding-left: 0 !important; }
           .mobile-overlay { display: block !important; }
           .mobile-menu-btn { display: block !important; }
