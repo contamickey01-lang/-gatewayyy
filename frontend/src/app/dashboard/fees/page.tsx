@@ -1,6 +1,6 @@
 'use client';
 
-import { FiInfo, FiCreditCard, FiCheckCircle, FiZap, FiFileText } from 'react-icons/fi';
+import { FiCheckCircle, FiZap, FiFileText } from 'react-icons/fi';
 
 export default function FeesPage() {
     const fees = [
@@ -12,15 +12,6 @@ export default function FeesPage() {
             payout: 'Na hora',
             icon: <FiZap size={24} color="#00cec9" />,
             description: 'O método mais rápido e barato para você e para o cliente.'
-        },
-        {
-            method: 'Cartão de Crédito',
-            platform: '3.00%',
-            gateway: '3.10% + R$ 0,99*',
-            total: '~7.10% + fixo',
-            payout: '30 dias',
-            icon: <FiCreditCard size={24} color="#6c5ce7" />,
-            description: 'Vendas seguras com antifraude incluso. *Taxa fixa de R$ 0,55 (processamento) + R$ 0,44 (antifraude).'
         },
         {
             method: 'Boleto Bancário',
