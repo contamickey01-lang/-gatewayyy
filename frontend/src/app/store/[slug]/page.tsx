@@ -85,17 +85,20 @@ export default function StorePage() {
     return (
         <div style={{ minHeight: '100vh', background: '#0a0a0c', color: '#e2e8f0', fontFamily: 'Outfit, Inter, sans-serif' }}>
             {/* Custom Header (Image 3 inspired) */}
-            <header style={{
+            <header
+                style={{
                 position: 'sticky', top: 0, zIndex: 100,
                 background: 'rgba(10, 10, 12, 0.8)', backdropFilter: 'blur(12px)',
                 borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '16px 24px'
-            }}>
-                <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
+            }}
+                className="storeHeader"
+            >
+                <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }} className="storeHeaderInner">
                     <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-0.5px', color: 'white', cursor: 'pointer' }} onClick={() => router.push(`/store/${params.slug}`)}>
                         {params.slug}
                     </div>
 
-                    <div style={{ flex: 1, maxWidth: 600, position: 'relative' }}>
+                    <div style={{ flex: 1, maxWidth: 600, position: 'relative' }} className="storeHeaderSearch">
                         <FiSearch size={18} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
                         <input
                             placeholder="Pesquisar produto"
@@ -111,7 +114,7 @@ export default function StorePage() {
                         />
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }} className="storeHeaderActions">
                         <button
                             onClick={() => router.push(`/store/${params.slug}/cart`)}
                             style={{
@@ -150,16 +153,16 @@ export default function StorePage() {
                 height: 300,
                 background: store.banner_url ? `url(${store.banner_url}) center/cover no-repeat` : 'linear-gradient(45deg, #0a0a0c, #1a1a20)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center'
-            }}>
+            }} className="storeBanner">
                 {store.banner_url && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0a0a0c, transparent)' }} />}
-                <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: 24 }}>
-                    <h1 style={{ fontSize: 42, fontWeight: 900, color: 'white', marginBottom: 8, letterSpacing: '-1px' }}>{store.name}</h1>
+                <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: 24 }} className="storeBannerText">
+                    <h1 style={{ fontSize: 42, fontWeight: 900, color: 'white', marginBottom: 8, letterSpacing: '-1px' }} className="storeBannerTitle">{store.name}</h1>
                     <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', maxWidth: 600 }}>{store.description}</p>
                 </div>
             </div>
 
             {/* Navigation & Products */}
-            <main style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 24px' }}>
+            <main style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 24px' }} className="storeMain">
                 {/* Categorias Horizontal Scroll */}
                 <div style={{ display: 'flex', gap: 12, marginBottom: 40, overflowX: 'auto', paddingBottom: 10 }}>
                     <button
@@ -192,7 +195,7 @@ export default function StorePage() {
                 </div>
 
                 {/* Grid (Image 1 Product Card inspired) */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 30 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 30 }} className="storeProductsGrid">
                     {filteredProducts.map(product => (
                         <div key={product.id} className="product-card" style={{
                             background: '#141417', borderRadius: 24, overflow: 'hidden',
@@ -274,6 +277,45 @@ export default function StorePage() {
                     border-color: rgba(255,255,255,0.1);
                     transform: translateY(-5px);
                     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+                }
+                @media (max-width: 900px) {
+                    .storeHeaderInner {
+                        flex-wrap: wrap;
+                    }
+                    .storeHeaderSearch {
+                        order: 3;
+                        flex-basis: 100%;
+                        max-width: none !important;
+                    }
+                }
+                @media (max-width: 640px) {
+                    .storeHeader {
+                        padding: 12px 14px !important;
+                    }
+                    .storeHeaderInner {
+                        gap: 12px !important;
+                    }
+                    .storeHeaderActions button {
+                        padding: 9px 12px !important;
+                        font-size: 12px !important;
+                        gap: 8px !important;
+                    }
+                    .storeBanner {
+                        height: 220px !important;
+                    }
+                    .storeBannerText {
+                        padding: 18px !important;
+                    }
+                    .storeBannerTitle {
+                        font-size: 28px !important;
+                    }
+                    .storeMain {
+                        padding: 24px 14px !important;
+                    }
+                    .storeProductsGrid {
+                        grid-template-columns: 1fr !important;
+                        gap: 16px !important;
+                    }
                 }
             `}</style>
         </div>

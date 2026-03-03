@@ -373,11 +373,14 @@ export default function CheckoutPage() {
                 </div>
             </div>
 
-            <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px 40px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'start' }}>
+            <div
+                style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px 40px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'start' }}
+                className="checkoutLayout"
+            >
                 {/* Product Info */}
                 <div style={{ padding: 0, overflow: 'hidden', background: bgCard, borderRadius: 16, border: `1px solid ${borderColor}` }}>
                     {!settings.hide_product_image && (
-                        <div style={{
+                        <div className="checkoutProductImage" style={{
                             height: 220, background: `linear-gradient(135deg, ${accent}22, ${accent}0a)`,
                             display: 'flex', alignItems: 'center', justifyContent: 'center'
                         }}>
@@ -388,7 +391,7 @@ export default function CheckoutPage() {
                             )}
                         </div>
                     )}
-                    <div style={{ padding: 28 }}>
+                    <div style={{ padding: 28 }} className="checkoutCardBody">
                         <span style={{ fontSize: 12, color: textMuted, fontWeight: 500 }}>Vendido por {product.seller_name}</span>
                         <h1 style={{ fontSize: 24, fontWeight: 700, marginTop: 8, marginBottom: 12, color: textPrimary }}>{product.name}</h1>
                         <p style={{ color: textSecondary, fontSize: 14, lineHeight: 1.7, marginBottom: 20 }}>
@@ -399,7 +402,7 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* Payment Form */}
-                <div style={{ padding: 28, background: bgCard, borderRadius: 16, border: `1px solid ${borderColor}` }}>
+                <div style={{ padding: 28, background: bgCard, borderRadius: 16, border: `1px solid ${borderColor}` }} className="checkoutCardBody">
                     <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 24, color: textPrimary }}>Finalizar Compra</h2>
                     <form onSubmit={handlePay}>
                         <div style={{ marginBottom: 20 }}>
@@ -407,7 +410,7 @@ export default function CheckoutPage() {
                             <input placeholder="Seu nome" required value={form.name} onChange={e => update('name', e.target.value)}
                                 style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: `1px solid ${borderColor}`, background: inputBg, color: textPrimary, fontSize: 14, outline: 'none', boxSizing: 'border-box' }} />
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }} className="checkoutGrid2">
                             <div>
                                 <label style={{ fontSize: 13, fontWeight: 500, color: textSecondary, marginBottom: 6, display: 'block' }}>Email</label>
                                 <input type="email" placeholder="seu@email.com" required value={form.email} onChange={e => update('email', e.target.value)}
@@ -429,7 +432,7 @@ export default function CheckoutPage() {
                         <div style={{ marginBottom: 24, padding: 20, background: 'rgba(255,255,255,0.02)', borderRadius: 16, border: `1px solid ${borderColor}` }}>
                             <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16 }}>Endereço de Cobrança</h3>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 12, marginBottom: 12 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 12, marginBottom: 12 }} className="checkoutGrid2">
                                 <div>
                                     <label style={{ fontSize: 12, color: textMuted, marginBottom: 4, display: 'block' }}>CEP</label>
                                     <input placeholder="00000-000" required value={address.cep} onChange={e => handleCepLookup(e.target.value)}
@@ -442,7 +445,7 @@ export default function CheckoutPage() {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 12, marginBottom: 12 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 12, marginBottom: 12 }} className="checkoutGrid2">
                                 <div>
                                     <label style={{ fontSize: 12, color: textMuted, marginBottom: 4, display: 'block' }}>Número</label>
                                     <input placeholder="123" required value={address.number} onChange={e => setAddress({ ...address, number: e.target.value })}
@@ -455,7 +458,7 @@ export default function CheckoutPage() {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '2.5fr 1fr', gap: 12 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '2.5fr 1fr', gap: 12 }} className="checkoutGrid2">
                                 <div>
                                     <label style={{ fontSize: 12, color: textMuted, marginBottom: 4, display: 'block' }}>Cidade</label>
                                     <input placeholder="Cidade" required value={address.city} onChange={e => setAddress({ ...address, city: e.target.value })}
@@ -513,7 +516,7 @@ export default function CheckoutPage() {
                                     <input placeholder="Nome como está no cartão" required value={form.card_holder} onChange={e => update('card_holder', e.target.value)}
                                         style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: `1px solid ${borderColor}`, background: inputBg, color: textPrimary, fontSize: 14, outline: 'none', boxSizing: 'border-box' }} />
                                 </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }} className="checkoutGrid3">
                                     <div>
                                         <label style={{ fontSize: 13, fontWeight: 500, color: textSecondary, marginBottom: 6, display: 'block' }}>Mês</label>
                                         <input placeholder="MM" maxLength={2} required value={form.card_exp_month} onChange={e => update('card_exp_month', e.target.value)}
@@ -555,8 +558,30 @@ export default function CheckoutPage() {
 
             <style jsx>{`
                 input:focus { border-color: ${accent} !important; box-shadow: 0 0 0 3px ${accent}22 !important; }
-                @media (max-width: 768px) {
-                    div[style*="gridTemplateColumns: '1fr 1fr'"] { grid-template-columns: 1fr !important; }
+                @media (max-width: 920px) {
+                    .checkoutLayout {
+                        grid-template-columns: 1fr !important;
+                        gap: 18px !important;
+                    }
+                }
+                @media (max-width: 640px) {
+                    .checkoutLayout {
+                        padding: 0 14px 28px !important;
+                    }
+                    .checkoutProductImage {
+                        height: 160px !important;
+                    }
+                    .checkoutCardBody {
+                        padding: 18px !important;
+                    }
+                    .checkoutGrid2 {
+                        grid-template-columns: 1fr !important;
+                        gap: 10px !important;
+                    }
+                    .checkoutGrid3 {
+                        grid-template-columns: 1fr 1fr !important;
+                        gap: 10px !important;
+                    }
                 }
             `}</style>
         </div>

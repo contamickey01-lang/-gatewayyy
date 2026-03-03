@@ -115,7 +115,7 @@ export default function CartPage() {
     };
 
     return (
-        <div style={{ minHeight: '100vh', background: '#0a0a0c', color: '#e2e8f0', fontFamily: 'Outfit, Inter, sans-serif', padding: '40px 24px' }}>
+        <div style={{ minHeight: '100vh', background: '#0a0a0c', color: '#e2e8f0', fontFamily: 'Outfit, Inter, sans-serif', padding: '40px 24px' }} className="storeCartPage">
             <div style={{ maxWidth: 1200, margin: '0 auto' }}>
                 <button
                     onClick={() => router.back()}
@@ -127,18 +127,18 @@ export default function CartPage() {
                 <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Carrinho de compras</h1>
                 <p style={{ color: '#64748b', marginBottom: 40, fontSize: 14 }}>Nesta página, você encontra os produtos adicionados ao seu carrinho.</p>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 32 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 32 }} className="storeCartGrid">
 
                     {/* Left Column: Payment & Cart Items */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
 
                         {/* Payment Info (Image 3 inspired) */}
-                        <div style={{ background: '#141417', borderRadius: 24, padding: 32, border: '1px solid rgba(255,255,255,0.03)' }}>
+                        <div style={{ background: '#141417', borderRadius: 24, padding: 32, border: '1px solid rgba(255,255,255,0.03)' }} className="storeCartCard">
                             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 24 }}>Informações de pagamento</h2>
 
                             <div style={{ marginBottom: 24 }}>
                                 <label style={{ fontSize: 13, fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 12 }}>Selecione o método</label>
-                                <div style={{ display: 'flex', gap: 12 }}>
+                                <div style={{ display: 'flex', gap: 12 }} className="storeCartPayMethods">
                                     <button
                                         onClick={() => setPaymentMethod('pix')}
                                         style={{
@@ -184,7 +184,7 @@ export default function CartPage() {
                                 />
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }} className="storeCartGrid2">
                                 <div>
                                     <label style={{ fontSize: 13, fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 8 }}>Email</label>
                                     <input
@@ -207,7 +207,7 @@ export default function CartPage() {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }} className="storeCartGrid2">
                                 <div>
                                     <label style={{ fontSize: 13, fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 8 }}>CPF</label>
                                     <input
@@ -231,7 +231,7 @@ export default function CartPage() {
                             <div style={{ marginTop: 24, padding: 20, background: 'rgba(255,255,255,0.02)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
                                 <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16, color: '#00cec9' }}>Endereço de Cobrança (Obrigatório para Produção)</h3>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 12, marginBottom: 16 }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 12, marginBottom: 16 }} className="storeCartGrid2">
                                     <div>
                                         <label style={{ fontSize: 12, fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 6 }}>CEP</label>
                                         <input
@@ -252,7 +252,7 @@ export default function CartPage() {
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 12, marginBottom: 16 }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 12, marginBottom: 16 }} className="storeCartGrid2">
                                     <div>
                                         <label style={{ fontSize: 12, fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 6 }}>Número</label>
                                         <input
@@ -273,7 +273,7 @@ export default function CartPage() {
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 12 }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 12 }} className="storeCartGrid2">
                                     <div>
                                         <label style={{ fontSize: 12, fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 6 }}>Cidade</label>
                                         <input
@@ -378,7 +378,7 @@ export default function CartPage() {
                         </div>
 
                         {/* Products in Cart (Image 3 inspired) */}
-                        <div style={{ background: '#141417', borderRadius: 24, padding: 32, border: '1px solid rgba(255,255,255,0.03)' }}>
+                        <div style={{ background: '#141417', borderRadius: 24, padding: 32, border: '1px solid rgba(255,255,255,0.03)' }} className="storeCartCard">
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
                                 <h2 style={{ fontSize: 18, fontWeight: 700 }}>Produtos no carrinho</h2>
                                 <span style={{ color: '#64748b', fontSize: 13, fontWeight: 600 }}>{items.length} itens</span>
@@ -389,7 +389,7 @@ export default function CartPage() {
                             ) : (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                                     {items.map(item => (
-                                        <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#0a0a0c', padding: 12, borderRadius: 16, border: '1px solid rgba(255,255,255,0.03)' }}>
+                                        <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#0a0a0c', padding: 12, borderRadius: 16, border: '1px solid rgba(255,255,255,0.03)' }} className="storeCartItemRow">
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                                                 <div style={{ width: 60, height: 60, borderRadius: 12, overflow: 'hidden', background: '#141417' }}>
                                                     {item.image_url ? <img src={item.image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <FiPackage style={{ margin: 20, opacity: 0.1 }} />}
@@ -403,7 +403,7 @@ export default function CartPage() {
                                                 </div>
                                             </div>
 
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 24 }} className="storeCartItemControls">
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#141417', borderRadius: 8, padding: '4px 8px', border: '1px solid rgba(255,255,255,0.05)' }}>
                                                     <FiMinus size={14} style={{ cursor: 'pointer' }} onClick={() => updateQuantity(item.id, -1)} />
                                                     <span style={{ fontSize: 14, fontWeight: 800 }}>{item.quantity}</span>
@@ -421,8 +421,8 @@ export default function CartPage() {
                     </div>
 
                     {/* Right Column: Order Summary */}
-                    <div style={{ position: 'sticky', top: 40 }}>
-                        <div style={{ background: '#141417', borderRadius: 24, padding: 32, border: '1px solid rgba(255,255,255,0.03)' }}>
+                    <div style={{ position: 'sticky', top: 40 }} className="storeCartSummaryWrap">
+                        <div style={{ background: '#141417', borderRadius: 24, padding: 32, border: '1px solid rgba(255,255,255,0.03)' }} className="storeCartCard">
                             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 24 }}>Resumo da compra</h2>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 32 }}>
@@ -460,6 +460,44 @@ export default function CartPage() {
 
                 </div>
             </div>
+            <style jsx>{`
+                @media (max-width: 980px) {
+                    .storeCartGrid {
+                        display: flex !important;
+                        flex-direction: column !important;
+                        gap: 18px !important;
+                    }
+                    .storeCartSummaryWrap {
+                        position: static !important;
+                        top: auto !important;
+                    }
+                }
+                @media (max-width: 640px) {
+                    .storeCartPage {
+                        padding: 24px 14px !important;
+                    }
+                    .storeCartCard {
+                        padding: 18px !important;
+                        border-radius: 20px !important;
+                    }
+                    .storeCartPayMethods {
+                        flex-direction: column !important;
+                    }
+                    .storeCartGrid2 {
+                        grid-template-columns: 1fr !important;
+                        gap: 12px !important;
+                    }
+                    .storeCartItemRow {
+                        align-items: flex-start !important;
+                        flex-direction: column !important;
+                        gap: 12px !important;
+                    }
+                    .storeCartItemControls {
+                        width: 100% !important;
+                        justify-content: space-between !important;
+                    }
+                }
+            `}</style>
         </div>
     );
 }
