@@ -156,10 +156,10 @@ export default function StoreProductsPage() {
     if (loading) return <div>Carregando...</div>;
 
     return (
-        <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-                <h2 style={{ fontSize: 18, fontWeight: 600 }}>Produtos da Vitrine</h2>
-                <div style={{ display: 'flex', gap: 12 }}>
+        <div className="store-products-page">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }} className="store-products-header">
+                <h2 style={{ fontSize: 18, fontWeight: 600 }} className="store-products-title">Produtos da Vitrine</h2>
+                <div style={{ display: 'flex', gap: 12 }} className="store-products-actions">
                     <button onClick={loadData} className="btn-secondary" style={{ padding: '8px 12px' }}>
                         <FiRefreshCw size={14} /> Atualizar
                     </button>
@@ -169,86 +169,88 @@ export default function StoreProductsPage() {
                 </div>
             </div>
 
-            <p style={{ color: 'var(--text-secondary)', marginBottom: 24, fontSize: 14 }}>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: 24, fontSize: 14 }} className="store-products-desc">
                 Crie novos produtos ou gerencie a visibilidade dos produtos existentes na sua loja pública.
             </p>
 
             <div className="glass-card" style={{ padding: 0, overflow: 'hidden' }}>
-                <table className="data-table">
-                    <thead>
-                        <tr>
-                            <th>Produto</th>
-                            <th>Preço</th>
-                            <th>Categoria na Loja</th>
-                            <th style={{ textAlign: 'center' }}>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {products.map(product => (
-                            <tr key={product.id} style={{ opacity: updatingParams === product.id ? 0.5 : 1 }}>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                        {product.image_url ? (
-                                            <img src={product.image_url} alt={product.name} style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover' }} />
-                                        ) : (
-                                            <div style={{ width: 40, height: 40, borderRadius: 8, background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                📦
-                                            </div>
-                                        )}
-                                        <div style={{ fontWeight: 500 }}>{product.name}</div>
-                                    </div>
-                                </td>
-                                <td>R$ {product.price_display}</td>
-                                <td>
-                                    <select
-                                        className="input-field"
-                                        style={{ padding: '6px 10px', fontSize: 13, height: 'auto', minWidth: 150 }}
-                                        value={product.store_category_id || ''}
-                                        onChange={e => changeCategory(product.id, e.target.value)}
-                                        disabled={updatingParams === product.id}
-                                    >
-                                        <option value="">-- Sem Categoria --</option>
-                                        {categories.map(cat => (
-                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                        ))}
-                                    </select>
-                                </td>
-                                <td style={{ textAlign: 'center' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                                        <button
-                                            onClick={() => toggleVisibility(product)}
-                                            disabled={updatingParams === product.id}
-                                            style={{
-                                                background: product.show_in_store ? 'rgba(0, 206, 201, 0.1)' : 'var(--bg-secondary)',
-                                                color: product.show_in_store ? 'var(--success)' : 'var(--text-muted)',
-                                                border: `1px solid ${product.show_in_store ? 'rgba(0, 206, 201, 0.3)' : 'var(--border-color)'}`,
-                                                padding: '6px 12px', borderRadius: 20, cursor: 'pointer',
-                                                fontWeight: 600, fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 6
-                                            }}
-                                            title="Mostrar na vitrine da loja"
-                                        >
-                                            {product.show_in_store ? <FiCheck size={14} /> : <FiX size={14} />}
-                                            {product.show_in_store ? 'Vitrine' : 'Oculto'}
-                                        </button>
-                                        <button
-                                            onClick={() => openEdit(product)}
-                                            style={{
-                                                background: 'var(--bg-secondary)',
-                                                border: '1px solid var(--border-color)',
-                                                color: 'var(--text-primary)',
-                                                padding: '6px 10px', borderRadius: 8, cursor: 'pointer',
-                                                display: 'inline-flex', alignItems: 'center', justifyContent: 'center'
-                                            }}
-                                            title="Editar Detalhes"
-                                        >
-                                            <FiEdit2 size={14} />
-                                        </button>
-                                    </div>
-                                </td>
+                <div style={{ overflowX: 'auto' }}>
+                    <table className="data-table" style={{ minWidth: 640 }}>
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Preço</th>
+                                <th>Categoria na Loja</th>
+                                <th style={{ textAlign: 'center' }}>Ações</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {products.map(product => (
+                                <tr key={product.id} style={{ opacity: updatingParams === product.id ? 0.5 : 1 }}>
+                                    <td>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                            {product.image_url ? (
+                                                <img src={product.image_url} alt={product.name} style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover' }} />
+                                            ) : (
+                                                <div style={{ width: 40, height: 40, borderRadius: 8, background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    📦
+                                                </div>
+                                            )}
+                                            <div style={{ fontWeight: 500 }}>{product.name}</div>
+                                        </div>
+                                    </td>
+                                    <td>R$ {product.price_display}</td>
+                                    <td>
+                                        <select
+                                            className="input-field"
+                                            style={{ padding: '6px 10px', fontSize: 13, height: 'auto', minWidth: 150 }}
+                                            value={product.store_category_id || ''}
+                                            onChange={e => changeCategory(product.id, e.target.value)}
+                                            disabled={updatingParams === product.id}
+                                        >
+                                            <option value="">-- Sem Categoria --</option>
+                                            {categories.map(cat => (
+                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                            ))}
+                                        </select>
+                                    </td>
+                                    <td style={{ textAlign: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                                            <button
+                                                onClick={() => toggleVisibility(product)}
+                                                disabled={updatingParams === product.id}
+                                                style={{
+                                                    background: product.show_in_store ? 'rgba(0, 206, 201, 0.1)' : 'var(--bg-secondary)',
+                                                    color: product.show_in_store ? 'var(--success)' : 'var(--text-muted)',
+                                                    border: `1px solid ${product.show_in_store ? 'rgba(0, 206, 201, 0.3)' : 'var(--border-color)'}`,
+                                                    padding: '6px 12px', borderRadius: 20, cursor: 'pointer',
+                                                    fontWeight: 600, fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 6
+                                                }}
+                                                title="Mostrar na vitrine da loja"
+                                            >
+                                                {product.show_in_store ? <FiCheck size={14} /> : <FiX size={14} />}
+                                                {product.show_in_store ? 'Vitrine' : 'Oculto'}
+                                            </button>
+                                            <button
+                                                onClick={() => openEdit(product)}
+                                                style={{
+                                                    background: 'var(--bg-secondary)',
+                                                    border: '1px solid var(--border-color)',
+                                                    color: 'var(--text-primary)',
+                                                    padding: '6px 10px', borderRadius: 8, cursor: 'pointer',
+                                                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center'
+                                                }}
+                                                title="Editar Detalhes"
+                                            >
+                                                <FiEdit2 size={14} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
                 {products.length === 0 && (
                     <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>
                         <p style={{ marginBottom: 16 }}>Nenhum produto cadastrado ainda.</p>
@@ -258,6 +260,41 @@ export default function StoreProductsPage() {
                     </div>
                 )}
             </div>
+
+            <style jsx global>{`
+        @media (max-width: 768px) {
+          .store-products-header {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 12px;
+          }
+          .store-products-title {
+            width: 100%;
+            text-align: center !important;
+          }
+          .store-products-actions {
+            width: 100%;
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px !important;
+          }
+          .store-products-actions button {
+            width: 100% !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+          }
+          .store-products-desc {
+            text-align: center;
+          }
+        }
+        @media (max-width: 420px) {
+          .store-products-actions {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
 
             {/* Modal */}
             {showModal && createPortal(

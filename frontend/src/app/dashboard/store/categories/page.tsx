@@ -64,10 +64,10 @@ export default function StoreCategoriesPage() {
     if (loading) return <div>Carregando...</div>;
 
     return (
-        <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
-            <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }} className="store-categories-layout">
+            <div style={{ flex: 1, minWidth: 0 }} className="store-categories-list">
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-                    <h2 style={{ fontSize: 18, fontWeight: 600 }}>Categorias Existentes</h2>
+                    <h2 style={{ fontSize: 18, fontWeight: 600 }} className="store-categories-title">Categorias Existentes</h2>
                 </div>
 
                 {categories.length === 0 ? (
@@ -96,7 +96,7 @@ export default function StoreCategoriesPage() {
                 )}
             </div>
 
-            <div className="glass-card" style={{ width: 350, position: 'sticky', top: 100 }}>
+            <div className="glass-card store-categories-form" style={{ width: 350, position: 'sticky', top: 100 }}>
                 <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 20 }}>
                     {isEditing ? 'Editar Categoria' : 'Nova Categoria'}
                 </h3>
@@ -128,6 +128,32 @@ export default function StoreCategoriesPage() {
                     </button>
                 </div>
             </div>
+
+            <style jsx global>{`
+        @media (max-width: 768px) {
+          .store-categories-layout {
+            flex-direction: column !important;
+            gap: 18px !important;
+            align-items: stretch !important;
+          }
+          .store-categories-title {
+            width: 100%;
+            text-align: center !important;
+          }
+          .store-categories-list {
+            width: 100% !important;
+            max-width: 560px !important;
+            margin: 0 auto !important;
+          }
+          .store-categories-form {
+            width: 100% !important;
+            max-width: 560px !important;
+            margin: 0 auto !important;
+            position: static !important;
+            top: auto !important;
+          }
+        }
+      `}</style>
         </div>
     );
 }
