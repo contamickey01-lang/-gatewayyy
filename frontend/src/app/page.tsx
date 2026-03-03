@@ -95,7 +95,7 @@ export default function LandingPage() {
       {/* Hero */}
       <section style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: 'var(--bg-primary)' }} className="landingHero">
         <img
-          src="https://i.imgur.com/oo0BV2x.png"
+          src="https://i.imgur.com/o1Nu0ym.png"
           alt=""
           aria-hidden="true"
           loading="lazy"
@@ -104,7 +104,7 @@ export default function LandingPage() {
             const img = e.currentTarget as HTMLImageElement;
             if (img.dataset.fallback === '1') return;
             img.dataset.fallback = '1';
-            img.src = 'https://i.imgur.com/oo0BV2x.jpg';
+            img.src = 'https://i.imgur.com/o1Nu0ym.jpg';
           }}
           style={{
             position: 'absolute',
