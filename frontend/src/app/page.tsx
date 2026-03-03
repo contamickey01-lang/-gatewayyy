@@ -98,7 +98,8 @@ export default function LandingPage() {
           src="https://i.imgur.com/hjbpfPp.png"
           alt=""
           aria-hidden="true"
-          loading="lazy"
+          loading="eager"
+          fetchPriority="high"
           referrerPolicy="no-referrer"
           onError={(e) => {
             const img = e.currentTarget as HTMLImageElement;
@@ -111,7 +112,7 @@ export default function LandingPage() {
             inset: 0,
             width: '100%',
             height: '100%',
-            objectFit: 'fill',
+            objectFit: 'cover',
             objectPosition: 'center',
             display: 'block'
           }}
