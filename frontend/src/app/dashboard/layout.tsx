@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const [user, setUser] = useState<any>(null);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
-    const [salesStats, setSalesStats] = useState<{ available: number; pending: number } | null>(null);
+    const [salesTotal, setSalesTotal] = useState<number | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
     const avatarRef = useRef<HTMLButtonElement>(null);
 
@@ -32,7 +32,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         let cancelled = false;
 
         const parseMoney = (v: any) => {
-            const n = typeof v === 'number' ? v : parseFloat(String(v ?? '0').replace(',', '.'));
+            if (typeof v === 'number') return Number.isFinite(v) ? v : 0;
+            const raw = String(v ?? '0').trim();
+            const cleaned = raw.replace(/[^\d,.\-]/g, '');
+            const normalized = cleaned.includes(',') && cleaned.includes('.')
+                ? cleaned.replace(/\./g, '').replace(',', '.')
+                : cleaned.replace(',', '.');
+            const n = parseFloat(normalized);
             return Number.isFinite(n) ? n : 0;
         };
 
@@ -40,11 +46,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             try {
                 const { data } = await dashboardAPI.getStats();
                 if (cancelled) return;
-                const available = parseMoney(data?.stats?.available_balance);
-                const pending = parseMoney(data?.stats?.pending_balance);
-                setSalesStats({ available, pending });
+                const totalSold = parseMoney(data?.stats?.total_sold);
+                setSalesTotal(totalSold);
             } catch {
-                if (!cancelled) setSalesStats(null);
+                if (!cancelled) setSalesTotal(null);
             }
         };
 
@@ -88,10 +93,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     if (!user) return null;
 
-    const available = salesStats?.available ?? 0;
-    const pending = salesStats?.pending ?? 0;
-    const total = available + pending;
-    const pct = total > 0 ? Math.max(0, Math.min(100, (available / total) * 100)) : 0;
+    const current = salesTotal ?? 0;
+    const targets = [10_000, 100_000, 500_000, 1_000_000];
+    const target = targets.find(t => current < t) ?? 1_000_000;
+    const pct = target > 0 ? Math.max(0, Math.min(100, (current / target) * 100)) : 0;
+    const formatBRL = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-primary)' }}>
@@ -195,7 +201,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 8 }} className="dashboard-sales-progress-labels">
                             <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>Progresso de Vendas</div>
                             <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>
-                                R$ {available.toFixed(2)} / R$ {total.toFixed(2)} ({pct.toFixed(0)}%)
+                                R$ {formatBRL(current)} / R$ {formatBRL(target)} ({pct.toFixed(0)}%)
                             </div>
                         </div>
                         <div style={{ height: 10, borderRadius: 999, background: 'rgba(108,92,231,0.14)', overflow: 'hidden' }}>
