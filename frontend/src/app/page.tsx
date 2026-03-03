@@ -1,10 +1,73 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useRef } from 'react';
 import { HiOutlineShieldCheck, HiOutlineCreditCard, HiOutlineCurrencyDollar, HiOutlineChartBar, HiOutlineLightningBolt, HiOutlineGlobeAlt } from 'react-icons/hi';
 import { FiArrowRight, FiZap, FiLock, FiTrendingUp, FiInstagram, FiYoutube, FiMessageCircle } from 'react-icons/fi';
 
 export default function LandingPage() {
+  const heroRef = useRef<HTMLElement>(null!);
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+
+    const setFromPoint = (clientX: number, clientY: number) => {
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        const rect = el.getBoundingClientRect();
+        const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+        const y = Math.min(Math.max(clientY - rect.top, 0), rect.height);
+        const px = rect.width ? (x / rect.width) * 100 : 50;
+        const py = rect.height ? (y / rect.height) * 100 : 50;
+        const dx = rect.width ? (x - rect.width / 2) / rect.width : 0;
+        const dy = rect.height ? (y - rect.height / 2) / rect.height : 0;
+        const tx = dx * 18;
+        const ty = dy * 14;
+
+        el.style.setProperty('--mx', `${px}%`);
+        el.style.setProperty('--my', `${py}%`);
+        el.style.setProperty('--tx', `${tx.toFixed(2)}px`);
+        el.style.setProperty('--ty', `${ty.toFixed(2)}px`);
+      });
+    };
+
+    const handleMouseMove = (e: MouseEvent) => setFromPoint(e.clientX, e.clientY);
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length < 1) return;
+      const t = e.touches[0];
+      setFromPoint(t.clientX, t.clientY);
+    };
+    const handleLeave = () => {
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        el.style.setProperty('--mx', `50%`);
+        el.style.setProperty('--my', `50%`);
+        el.style.setProperty('--tx', `0px`);
+        el.style.setProperty('--ty', `0px`);
+      });
+    };
+
+    el.style.setProperty('--mx', `50%`);
+    el.style.setProperty('--my', `50%`);
+    el.style.setProperty('--tx', `0px`);
+    el.style.setProperty('--ty', `0px`);
+
+    el.addEventListener('mousemove', handleMouseMove, { passive: true });
+    el.addEventListener('touchmove', handleTouchMove, { passive: true });
+    el.addEventListener('mouseleave', handleLeave, { passive: true });
+    el.addEventListener('touchend', handleLeave, { passive: true });
+
+    return () => {
+      el.removeEventListener('mousemove', handleMouseMove);
+      el.removeEventListener('touchmove', handleTouchMove);
+      el.removeEventListener('mouseleave', handleLeave);
+      el.removeEventListener('touchend', handleLeave);
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
   return (
     <div id="inicio" className="force-light" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', minHeight: '100vh' }}>
       {/* Header */}
@@ -93,8 +156,8 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section style={{ position: 'relative', height: 'clamp(520px, 78vh, 820px)', overflow: 'hidden', background: '#0a0a0f' }} className="landingHero">
-        <picture style={{ position: 'absolute', inset: 0 }}>
+      <section ref={heroRef} style={{ position: 'relative', height: 'clamp(520px, 78vh, 820px)', overflow: 'hidden', background: '#0a0a0f' }} className="landingHero">
+        <picture style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
           <source media="(max-width: 768px)" srcSet="https://i.imgur.com/wXmNNSd.png" />
           <img
             src="https://i.imgur.com/wjppcWE.png"
@@ -444,6 +507,61 @@ export default function LandingPage() {
         </div>
 
         <style jsx global>{`
+          .landingHero {
+            isolation: isolate;
+            --mx: 50%;
+            --my: 50%;
+            --tx: 0px;
+            --ty: 0px;
+          }
+          .landingHero::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.92;
+            background:
+              radial-gradient(680px circle at var(--mx) var(--my), rgba(108,92,231,0.40) 0%, rgba(108,92,231,0.00) 58%),
+              radial-gradient(520px circle at calc(var(--mx) + 140px) calc(var(--my) + 110px), rgba(0,206,201,0.24) 0%, rgba(0,206,201,0.00) 62%),
+              radial-gradient(860px circle at 20% 10%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 55%);
+            mix-blend-mode: screen;
+            filter: saturate(1.1);
+          }
+          .landingHero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            background:
+              radial-gradient(2px 2px at 12% 22%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.00) 65%),
+              radial-gradient(1.6px 1.6px at 78% 30%, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.00) 70%),
+              radial-gradient(1.8px 1.8px at 34% 70%, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.00) 70%),
+              radial-gradient(1.5px 1.5px at 62% 78%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.00) 72%);
+            opacity: 0.55;
+            animation: heroTwinkle 6.5s ease-in-out infinite;
+          }
+          .landingHeroImg {
+            transform: translate3d(var(--tx), var(--ty), 0) scale(1.035);
+            will-change: transform;
+            transition: transform 120ms ease;
+          }
+          @keyframes heroTwinkle {
+            0%, 100% { opacity: 0.42; transform: translate3d(0, 0, 0); }
+            50% { opacity: 0.65; transform: translate3d(0, -4px, 0); }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .landingHero::before,
+            .landingHero::after {
+              animation: none !important;
+              display: none !important;
+            }
+            .landingHeroImg {
+              transition: none !important;
+              transform: none !important;
+            }
+          }
           @media (max-width: 980px) {
             .landingFooterGrid {
               grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
