@@ -158,9 +158,9 @@ export default function LandingPage() {
       {/* Hero */}
       <section ref={heroRef} style={{ position: 'relative', height: 'clamp(520px, 78vh, 820px)', overflow: 'hidden', background: '#0a0a0f' }} className="landingHero">
         <picture style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
-          <source media="(max-width: 768px)" srcSet="https://i.imgur.com/wXmNNSd.png" />
+          <source media="(max-width: 768px)" srcSet="https://i.imgur.com/lmM1Hdm.png" />
           <img
-            src="https://i.imgur.com/wjppcWE.png"
+            src="https://i.imgur.com/lmM1Hdm.png"
             alt=""
             aria-hidden="true"
             loading="eager"
@@ -170,7 +170,7 @@ export default function LandingPage() {
               const img = e.currentTarget as HTMLImageElement;
               if (img.dataset.fallback === '1') return;
               img.dataset.fallback = '1';
-              img.src = 'https://i.imgur.com/wjppcWE.jpg';
+              img.src = 'https://i.imgur.com/lmM1Hdm.jpg';
             }}
             style={{
               width: '100%',
