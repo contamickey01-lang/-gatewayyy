@@ -94,30 +94,31 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: '#0a0a0f' }} className="landingHero">
-        <img
-          src="https://i.imgur.com/wjppcWE.png"
-          alt=""
-          aria-hidden="true"
-          loading="eager"
-          fetchPriority="high"
-          referrerPolicy="no-referrer"
-          onError={(e) => {
-            const img = e.currentTarget as HTMLImageElement;
-            if (img.dataset.fallback === '1') return;
-            img.dataset.fallback = '1';
-            img.src = 'https://i.imgur.com/wjppcWE.jpg';
-          }}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            objectPosition: 'center',
-            display: 'block'
-          }}
-          className="landingHeroImg"
-        />
+        <picture style={{ position: 'absolute', inset: 0 }}>
+          <source media="(max-width: 768px)" srcSet="https://i.imgur.com/wXmNNSd.png" />
+          <img
+            src="https://i.imgur.com/wjppcWE.png"
+            alt=""
+            aria-hidden="true"
+            loading="eager"
+            fetchPriority="high"
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              const img = e.currentTarget as HTMLImageElement;
+              if (img.dataset.fallback === '1') return;
+              img.dataset.fallback = '1';
+              img.src = 'https://i.imgur.com/wjppcWE.jpg';
+            }}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center',
+              display: 'block'
+            }}
+            className="landingHeroImg"
+          />
+        </picture>
       </section>
 
       {/* Features */}
