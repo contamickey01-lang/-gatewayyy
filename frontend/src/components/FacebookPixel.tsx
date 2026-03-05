@@ -37,23 +37,36 @@ export default function FacebookPixel({ pixelId, product }: FacebookPixelProps) 
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
+        // Verifica se o pixel já foi carregado anteriormente
+        if (typeof window !== 'undefined' && window.fbq) {
+            setLoaded(true);
+        }
+    }, []);
+
+    useEffect(() => {
         if (!loaded || !pixelId) return;
         pageview(pixelId);
     }, [pathname, searchParams, loaded, pixelId]);
 
     useEffect(() => {
-        if (!loaded || !product) return;
+        // Só dispara se tiver pixelId, estiver carregado e tiver produto
+        if (!loaded || !product || !pixelId) return;
         
-        // Dispara InitiateCheckout assim que o pixel carrega e o produto existe
-        event('InitiateCheckout', {
-            content_name: product.name,
-            content_ids: [product.id],
-            content_type: 'product',
-            value: (product.price / 100).toFixed(2),
-            currency: 'BRL',
-            num_items: 1
-        });
-    }, [loaded, product]);
+        // Pequeno delay para garantir que o script processou tudo
+        const timer = setTimeout(() => {
+            // Dispara InitiateCheckout assim que o pixel carrega e o produto existe
+            event('InitiateCheckout', {
+                content_name: product.name,
+                content_ids: [product.id],
+                content_type: 'product',
+                value: (product.price / 100).toFixed(2),
+                currency: 'BRL',
+                num_items: 1
+            });
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [loaded, product, pixelId]);
 
     if (!pixelId) return null;
 
