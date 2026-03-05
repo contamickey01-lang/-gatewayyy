@@ -1,4 +1,5 @@
 const { supabase } = require('../config/database');
+const FacebookService = require('../services/facebook.service');
 
 class WebhookController {
     async handlePagarme(req, res, next) {
@@ -94,14 +95,19 @@ class WebhookController {
         if (order.product_id) {
             const { data: product } = await supabase
                 .from('products')
-                .select('sales_count, type')
+                .select('*') // Get all fields including pixel settings
                 .eq('id', order.product_id)
                 .single();
 
-            await supabase
-                .from('products')
-                .update({ sales_count: (product?.sales_count || 0) + 1 })
-                .eq('id', order.product_id);
+            if (product) {
+                await supabase
+                    .from('products')
+                    .update({ sales_count: (product.sales_count || 0) + 1 })
+                    .eq('id', order.product_id);
+
+                // Send Facebook CAPI Event
+                await FacebookService.sendPurchaseEvent(order, product);
+            }
 
             // AUTO-ENROLLMENT for digital products
             if (product?.type === 'digital' && order.buyer_email) {

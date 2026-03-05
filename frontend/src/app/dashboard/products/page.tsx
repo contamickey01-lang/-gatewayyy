@@ -18,7 +18,8 @@ export default function ProductsPage() {
     const [selectedProductForEnroll, setSelectedProductForEnroll] = useState<any>(null);
     const [editing, setEditing] = useState<any>(null);
     const [form, setForm] = useState({
-        name: '', description: '', price: '', image_url: '', type: 'digital', status: 'active'
+        name: '', description: '', price: '', image_url: '', type: 'digital', status: 'active',
+        facebook_pixel_id: '', facebook_api_token: ''
     });
     const [uploading, setUploading] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -39,7 +40,7 @@ export default function ProductsPage() {
 
     const openCreate = () => {
         setEditing(null);
-        setForm({ name: '', description: '', price: '', image_url: '', type: 'digital', status: 'active' });
+        setForm({ name: '', description: '', price: '', image_url: '', type: 'digital', status: 'active', facebook_pixel_id: '', facebook_api_token: '' });
         setSelectedFile(null);
         setImagePreview(null);
         setShowModal(true);
@@ -53,7 +54,9 @@ export default function ProductsPage() {
             price: product.price_display || (product.price / 100).toFixed(2),
             image_url: product.image_url || '',
             type: product.type,
-            status: product.status
+            status: product.status,
+            facebook_pixel_id: product.facebook_pixel_id || '',
+            facebook_api_token: product.facebook_api_token || ''
         });
         setSelectedFile(null);
         setImagePreview(product.image_url || null);
@@ -286,6 +289,24 @@ export default function ProductsPage() {
                                         <option value="physical">Físico</option>
                                     </select>
                                 </div>
+                            </div>
+
+                            <div style={{ marginBottom: 16 }}>
+                                <label style={{ display: 'block', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 6 }}>Facebook Pixel ID (Opcional)</label>
+                                <input type="text" className="input-field" placeholder="Ex: 1234567890"
+                                    value={form.facebook_pixel_id} onChange={e => update('facebook_pixel_id', e.target.value)} />
+                                <p style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>
+                                    ID do Pixel para rastreamento de eventos no checkout.
+                                </p>
+                            </div>
+
+                            <div style={{ marginBottom: 16 }}>
+                                <label style={{ display: 'block', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 6 }}>Facebook Access Token (Opcional)</label>
+                                <input type="text" className="input-field" placeholder="Token da API de Conversões"
+                                    value={form.facebook_api_token} onChange={e => update('facebook_api_token', e.target.value)} />
+                                <p style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>
+                                    Token de acesso para enviar eventos via API (Server-side) quando o pagamento for aprovado.
+                                </p>
                             </div>
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 24 }}>

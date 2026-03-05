@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Script from 'next/script';
 import { productsAPI, checkoutAPI } from '@/lib/api';
 import toast from 'react-hot-toast';
 import { FiShoppingCart, FiCreditCard, FiSmartphone, FiCheck, FiCopy, FiPackage, FiArrowRight, FiClock } from 'react-icons/fi';
@@ -309,6 +310,35 @@ export default function CheckoutPage() {
 
     return (
         <div style={{ minHeight: '100vh', background: bgPrimary, color: textPrimary }}>
+            {product?.facebook_pixel_id && (
+                <>
+                    <Script
+                        id="fb-pixel"
+                        strategy="afterInteractive"
+                        dangerouslySetInnerHTML={{
+                            __html: `
+                            !function(f,b,e,v,n,t,s)
+                            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                            n.queue=[];t=b.createElement(e);t.async=!0;
+                            t.src=v;s=b.getElementsByTagName(e)[0];
+                            s.parentNode.insertBefore(t,s)}(window, document,'script',
+                            'https://connect.facebook.net/en_US/fbevents.js');
+                            fbq('init', '${product.facebook_pixel_id}');
+                            fbq('track', 'PageView');
+                            fbq('track', 'InitiateCheckout', {
+                                content_name: '${product.name.replace(/'/g, "\\'")}',
+                                content_ids: ['${product.id}'],
+                                content_type: 'product',
+                                value: ${(product.price / 100).toFixed(2)},
+                                currency: 'BRL'
+                            });
+                            `,
+                        }}
+                    />
+                </>
+            )}
             {/* Countdown Timer */}
             {settings.show_countdown && timerSeconds > 0 && (
                 <div style={{

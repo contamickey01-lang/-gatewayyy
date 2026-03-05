@@ -1,11 +1,11 @@
 const { supabase } = require('../config/database');
 
 class ProductController {
-    async create(req, res, next) {
+    async create(req, res) {
         try {
-            const { name, description, price, image_url, type, status } = req.body;
+            const { name, description, price, image_url, type, status, facebook_pixel_id, facebook_api_token } = req.body;
 
-            const { data: products, error } = await supabase
+            const { data, error } = await supabase
                 .from('products')
                 .insert({
                     user_id: req.user.id,
@@ -16,16 +16,18 @@ class ProductController {
                     type: type || 'digital',
                     status: status || 'active',
                     store_category_id: req.body.store_category_id || null,
-                    show_in_store: req.body.show_in_store || false
+                    show_in_store: req.body.show_in_store || false,
+                    facebook_pixel_id,
+                    facebook_api_token
                 })
-                .select();
+                .select()
+                .single();
 
             if (error) throw error;
-            const data = products && products.length > 0 ? products[0] : null;
 
             res.status(201).json({ product: data, message: 'Produto criado com sucesso!' });
         } catch (error) {
-            next(error);
+            res.status(500).json({ error: error.message });
         }
     }
 
@@ -83,33 +85,40 @@ class ProductController {
         }
     }
 
-    async update(req, res, next) {
+    async update(req, res) {
         try {
-            const allowedFields = ['name', 'description', 'price', 'image_url', 'type', 'status', 'store_category_id', 'show_in_store'];
-            const updates = {};
+            const { id } = req.params;
+            const { name, description, price, image_url, type, status, facebook_pixel_id, facebook_api_token } = req.body;
 
-            allowedFields.forEach(field => {
-                if (req.body[field] !== undefined) {
-                    updates[field] = field === 'price' ? Math.round(req.body[field] * 100) : req.body[field];
-                }
-            });
-            updates.updated_at = new Date().toISOString();
+            const updates = {
+                name,
+                description,
+                image_url,
+                type,
+                status,
+                facebook_pixel_id,
+                facebook_api_token,
+                updated_at: new Date().toISOString()
+            };
 
-            const { data: products, error } = await supabase
+            if (price !== undefined) {
+                updates.price = Math.round(price * 100);
+            }
+
+            const { data, error } = await supabase
                 .from('products')
                 .update(updates)
-                .eq('id', req.params.id)
+                .eq('id', id)
                 .eq('user_id', req.user.id)
-                .select();
-
-            const data = products && products.length > 0 ? products[0] : null;
+                .select()
+                .single();
 
             if (error) throw error;
             if (!data) return res.status(404).json({ error: 'Produto não encontrado.' });
 
             res.json({ product: data, message: 'Produto atualizado com sucesso!' });
         } catch (error) {
-            next(error);
+            res.status(500).json({ error: error.message });
         }
     }
 
