@@ -4,27 +4,27 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "GouPay — Plataforma de Pagamentos",
+  title: "GouPay",
   description: "Gateway de pagamentos e marketplace SaaS. Venda seus produtos online com checkout profissional, split de pagamentos e saques via Pix.",
   keywords: "gateway de pagamentos, marketplace, pix, cartão de crédito, split, vendas online",
   applicationName: "GouPay",
   icons: {
-    icon: "https://i.imgur.com/8COtGmp.png",
-    shortcut: "https://i.imgur.com/8COtGmp.png",
-    apple: "https://i.imgur.com/8COtGmp.png",
+    icon: "https://i.imgur.com/LP4zqhW.png",
+    shortcut: "https://i.imgur.com/LP4zqhW.png",
+    apple: "https://i.imgur.com/LP4zqhW.png",
   },
   openGraph: {
-    title: "GouPay — Plataforma de Pagamentos",
+    title: "GouPay",
     description: "Gateway de pagamentos e marketplace SaaS. Venda seus produtos online com checkout profissional, split de pagamentos e saques via Pix.",
     siteName: "GouPay",
-    images: ["https://i.imgur.com/8COtGmp.png"],
+    images: ["https://i.imgur.com/LP4zqhW.png"],
     type: "website",
     locale: "pt_BR",
   },
   twitter: {
     card: "summary",
-    title: "GouPay — Plataforma de Pagamentos",
-    images: ["https://i.imgur.com/8COtGmp.png"],
+    title: "GouPay",
+    images: ["https://i.imgur.com/LP4zqhW.png"],
   },
 };
 
