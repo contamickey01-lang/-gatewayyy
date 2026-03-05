@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { name, description, price, image_url, type, status } = body;
+        const { name, description, price, image_url, type, status, facebook_pixel_id, facebook_api_token } = body;
 
         if (!name || !price) return jsonError('Nome e preço são obrigatórios');
 
@@ -40,7 +40,8 @@ export async function POST(req: NextRequest) {
             id: uuidv4(), user_id: auth.user.id,
             name, description, price: priceInCents,
             price_display: parseFloat(price).toFixed(2),
-            image_url, type: type || 'digital', status: status || 'active'
+            image_url, type: type || 'digital', status: status || 'active',
+            facebook_pixel_id, facebook_api_token
         }).select().single();
 
         if (error) {

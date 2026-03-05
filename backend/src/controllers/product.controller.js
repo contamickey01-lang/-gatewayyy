@@ -112,7 +112,7 @@ class ProductController {
                 .eq('user_id', req.user.id)
                 .select()
                 .single();
-
+            
             if (error) throw error;
             if (!data) return res.status(404).json({ error: 'Produto não encontrado.' });
 

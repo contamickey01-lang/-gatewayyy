@@ -42,6 +42,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         if (body.type) updateData.type = body.type;
         if (body.status) updateData.status = body.status;
         if (body.checkout_settings !== undefined) updateData.checkout_settings = body.checkout_settings;
+        if (body.facebook_pixel_id !== undefined) updateData.facebook_pixel_id = body.facebook_pixel_id;
+        if (body.facebook_api_token !== undefined) updateData.facebook_api_token = body.facebook_api_token;
 
         // Novos campos da loja
         if (body.store_category_id !== undefined) updateData.store_category_id = body.store_category_id;
