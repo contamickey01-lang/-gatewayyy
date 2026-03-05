@@ -1,26 +1,17 @@
 'use client';
 
-import { FiCheckCircle, FiZap, FiFileText } from 'react-icons/fi';
+import { FiCheckCircle, FiZap } from 'react-icons/fi';
 
 export default function FeesPage() {
     const fees = [
         {
             method: 'Pix',
-            platform: '3.00%',
+            platform: '2.00%',
             gateway: '1.09%',
-            total: '4.09%',
+            total: '3.09%',
             payout: 'Na hora',
             icon: <FiZap size={24} color="#00cec9" />,
             description: 'O método mais rápido e barato para você e para o cliente.'
-        },
-        {
-            method: 'Boleto Bancário',
-            platform: '3.00%',
-            gateway: 'R$ 3,10',
-            total: '3% + R$ 3,10',
-            payout: '2 dias úteis',
-            icon: <FiFileText size={24} color="#fdcb6e" />,
-            description: 'Ideal para quem não tem cartão ou chave Pix.'
         }
     ];
 
