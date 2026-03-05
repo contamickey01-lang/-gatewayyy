@@ -146,3 +146,78 @@ CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON transactions(user_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_order_id ON transactions(order_id);
 CREATE INDEX IF NOT EXISTS idx_withdrawals_user_id ON withdrawals(user_id);
 CREATE INDEX IF NOT EXISTS idx_recipients_user_id ON recipients(user_id);
+
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE recipients ENABLE ROW LEVEL SECURITY;
+ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE withdrawals ENABLE ROW LEVEL SECURITY;
+ALTER TABLE platform_fees ENABLE ROW LEVEL SECURITY;
+ALTER TABLE platform_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users view own data"
+ON users FOR SELECT
+TO authenticated
+USING (id = auth.uid());
+
+CREATE POLICY "Users update own data"
+ON users FOR UPDATE
+TO authenticated
+USING (id = auth.uid())
+WITH CHECK (id = auth.uid());
+
+CREATE VIEW IF NOT EXISTS user_profiles AS
+SELECT id, name, avatar_url, store_name, store_slug, store_description
+FROM users
+WHERE store_active = true;
+GRANT SELECT ON TABLE user_profiles TO anon, authenticated;
+
+CREATE POLICY "Recipients view own"
+ON recipients FOR SELECT
+TO authenticated
+USING (user_id = auth.uid());
+
+CREATE POLICY "Recipients manage own"
+ON recipients FOR ALL
+TO authenticated
+USING (user_id = auth.uid())
+WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Products publicly visible"
+ON products FOR SELECT
+TO public
+USING (show_in_store = true AND status = 'active');
+
+CREATE POLICY "Products manage own"
+ON products FOR ALL
+TO authenticated
+USING (user_id = auth.uid())
+WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Orders seller view"
+ON orders FOR SELECT
+TO authenticated
+USING (seller_id = auth.uid());
+
+CREATE POLICY "Transactions view own"
+ON transactions FOR SELECT
+TO authenticated
+USING (user_id = auth.uid());
+
+CREATE POLICY "Withdrawals manage own"
+ON withdrawals FOR ALL
+TO authenticated
+USING (user_id = auth.uid())
+WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Platform settings admin read"
+ON platform_settings FOR SELECT
+TO authenticated
+USING (EXISTS (SELECT 1 FROM users u WHERE u.id = auth.uid() AND u.role = 'admin'));
+
+CREATE POLICY "Platform settings admin manage"
+ON platform_settings FOR ALL
+TO authenticated
+USING (EXISTS (SELECT 1 FROM users u WHERE u.id = auth.uid() AND u.role = 'admin'))
+WITH CHECK (EXISTS (SELECT 1 FROM users u WHERE u.id = auth.uid() AND u.role = 'admin'));

@@ -42,9 +42,11 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS store_banner_url TEXT;
 -- qualquer um veja as colunas da loja dos usuários ativos.
 
 DROP POLICY IF EXISTS "Public can view store profiles" ON users;
-CREATE POLICY "Public can view store profiles" 
-ON users FOR SELECT 
-USING (store_active = true);
+CREATE VIEW IF NOT EXISTS user_profiles AS
+SELECT id, name, avatar_url, store_name, store_slug, store_description
+FROM users
+WHERE store_active = true;
+GRANT SELECT ON TABLE user_profiles TO anon, authenticated;
 
 -- Caso a tabela de usuários não tenha RLS ativado, mas você queira ativar:
 -- ALTER TABLE users ENABLE ROW LEVEL SECURITY;
