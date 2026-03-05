@@ -9,22 +9,22 @@ export const metadata: Metadata = {
   keywords: "gateway de pagamentos, marketplace, pix, cartão de crédito, split, vendas online",
   applicationName: "GouPay",
   icons: {
-    icon: "https://i.imgur.com/LP4zqhW.png",
-    shortcut: "https://i.imgur.com/LP4zqhW.png",
-    apple: "https://i.imgur.com/LP4zqhW.png",
+    icon: "/favicon",
+    shortcut: "/favicon",
+    apple: "/favicon",
   },
   openGraph: {
     title: "GouPay",
     description: "Gateway de pagamentos e marketplace SaaS. Venda seus produtos online com checkout profissional, split de pagamentos e saques via Pix.",
     siteName: "GouPay",
-    images: ["https://i.imgur.com/LP4zqhW.png"],
+    images: ["/favicon"],
     type: "website",
     locale: "pt_BR",
   },
   twitter: {
     card: "summary",
     title: "GouPay",
-    images: ["https://i.imgur.com/LP4zqhW.png"],
+    images: ["/favicon"],
   },
 };
 
