@@ -18,7 +18,8 @@ export default function ClassroomPage() {
     const [modules, setModules] = useState<any[]>([]);
     const [currentLesson, setCurrentLesson] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     const loadContent = useCallback(async () => {
         try {
@@ -38,6 +39,16 @@ export default function ClassroomPage() {
     }, [productId, router]);
 
     useEffect(() => { loadContent(); }, [loadContent]);
+    useEffect(() => {
+        const update = () => {
+            const mobile = window.innerWidth < 768;
+            setIsMobile(mobile);
+            setSidebarOpen(!mobile);
+        };
+        update();
+        window.addEventListener('resize', update);
+        return () => window.removeEventListener('resize', update);
+    }, []);
 
     const selectLesson = async (lessonId: string) => {
         try {
@@ -71,24 +82,40 @@ export default function ClassroomPage() {
     }
 
     return (
-        <div style={{ display: 'flex', height: '100vh', background: 'var(--bg-primary)', color: 'var(--text-primary)', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', height: '100dvh', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
 
             {/* Sidebar Mobile Toggle */}
-            {!sidebarOpen && (
-                <button onClick={() => setSidebarOpen(true)} style={{
-                    color: 'var(--text-primary)', width: 40, height: 40, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)', border: '1px solid var(--border-color)'
-                }}>
+            {!sidebarOpen && isMobile && (
+                <button
+                    onClick={() => setSidebarOpen(true)}
+                    style={{
+                        color: 'var(--text-primary)', width: 40, height: 40, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.3)', border: '1px solid var(--border-color)',
+                        position: 'fixed', top: 12, left: 12, zIndex: 95, background: 'var(--bg-secondary)'
+                    }}
+                >
                     <FiMenu size={20} />
                 </button>
             )}
 
             {/* Sidebar */}
-            <aside style={{
-                width: 320, background: 'var(--bg-secondary)', borderRight: '1px solid var(--border-color)',
-                display: sidebarOpen ? 'flex' : 'none', flexDirection: 'column',
-                position: 'relative', zIndex: 90, flexShrink: 0
-            }}>
+            <aside
+                style={{
+                    width: isMobile ? '85%' : 320,
+                    maxWidth: 360,
+                    background: 'var(--bg-secondary)',
+                    borderRight: isMobile ? 'none' : '1px solid var(--border-color)',
+                    display: sidebarOpen ? 'flex' : 'none',
+                    flexDirection: 'column',
+                    position: isMobile ? 'fixed' : 'relative',
+                    inset: isMobile ? '0 auto 0 0' : undefined,
+                    zIndex: 100,
+                    flexShrink: 0,
+                    height: isMobile ? '100dvh' : '100%',
+                    boxShadow: isMobile ? '0 20px 50px rgba(0,0,0,0.4)' : 'none',
+                    border: isMobile ? '1px solid var(--border-color)' : undefined
+                }}
+            >
                 <div style={{ padding: '24px 20px', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Link href="/area-membros" style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-secondary)', fontSize: 13, fontWeight: 500 }}>
                         <FiArrowLeft /> Meus Cursos
@@ -130,6 +157,16 @@ export default function ClassroomPage() {
                 </div>
             </aside>
 
+            {/* Overlay */}
+            {sidebarOpen && isMobile && (
+                <div
+                    onClick={() => setSidebarOpen(false)}
+                    style={{
+                        position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 90
+                    }}
+                />
+            )}
+
             {/* Main Content */}
             <main style={{ flex: 1, overflowY: 'auto', position: 'relative' }}>
                 {currentLesson ? (
@@ -167,7 +204,7 @@ export default function ClassroomPage() {
                         </div>
 
                         {/* Content Area */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: 40 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 1fr) 300px', gap: 40 }}>
                             <div className="glass-card" style={{ padding: 32 }}>
                                 <h4 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16 }}>Descrição da Aula</h4>
                                 <div style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: 15, whiteSpace: 'pre-wrap' }}>
