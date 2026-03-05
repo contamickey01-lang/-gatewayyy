@@ -8,14 +8,14 @@ import { FiSave, FiPercent } from 'react-icons/fi';
 export default function AdminSettingsPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
-    const [feePercentage, setFeePercentage] = useState('15');
+    const [feePercentage, setFeePercentage] = useState('2');
     const [settings, setSettings] = useState<any>(null);
 
     useEffect(() => {
         adminAPI.getSettings()
             .then(res => {
                 setSettings(res.data.settings);
-                setFeePercentage(res.data.settings?.fee_percentage?.toString() || '15');
+                setFeePercentage(res.data.settings?.fee_percentage?.toString() || '2');
             })
             .catch(console.error)
             .finally(() => setLoading(false));
