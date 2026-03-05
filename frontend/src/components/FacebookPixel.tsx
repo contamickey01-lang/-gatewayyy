@@ -6,26 +6,38 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 export const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
 
-export const pageview = (pixelId) => {
+declare global {
+    interface Window {
+        fbq: any;
+        _fbq: any;
+    }
+}
+
+export const pageview = (pixelId: string) => {
     if (typeof window !== 'undefined' && window.fbq) {
         window.fbq('track', 'PageView');
     }
 };
 
 // https://developers.facebook.com/docs/facebook-pixel/advanced/
-export const event = (name, options = {}) => {
+export const event = (name: string, options = {}) => {
     if (typeof window !== 'undefined' && window.fbq) {
         window.fbq('track', name, options);
     }
 };
 
-export default function FacebookPixel({ pixelId, product }) {
+interface FacebookPixelProps {
+    pixelId?: string;
+    product?: any;
+}
+
+export default function FacebookPixel({ pixelId, product }: FacebookPixelProps) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        if (!loaded) return;
+        if (!loaded || !pixelId) return;
         pageview(pixelId);
     }, [pathname, searchParams, loaded, pixelId]);
 
