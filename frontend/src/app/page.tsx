@@ -195,7 +195,7 @@ export default function LandingPage() {
                   Checkout <span className="gradient-text">premium</span> para você vender mais com Pix e cartão
                 </h1>
                 <p style={{ color: 'rgba(255,255,255,0.78)', fontSize: 15, lineHeight: 1.75, marginBottom: 16 }} className="landingHeroSubtitle">
-                  Crie sua loja, publique seus produtos e acompanhe as vendas em tempo real. Tudo no mesmo lugar, com experiência de compra rápida e segura.
+                  Tudo em um só lugar. Seu site, checkout de alta conversão e as melhores taxas para escalar sua operação com máxima eficiência.
                 </p>
 
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }} className="landingHeroActions">
