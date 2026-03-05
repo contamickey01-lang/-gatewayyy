@@ -10,6 +10,7 @@ import { FiUser, FiMail, FiLock, FiArrowRight, FiFileText } from 'react-icons/fi
 export default function RegisterPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [termsAccepted, setTermsAccepted] = useState(false);
     const [form, setForm] = useState({
         name: '', email: '', password: '', confirmPassword: '', cpf_cnpj: '', phone: ''
     });
@@ -19,6 +20,9 @@ export default function RegisterPage() {
         if (form.password !== form.confirmPassword) {
             return toast.error('As senhas não coincidem');
         }
+        if (!termsAccepted) {
+            return toast.error('Você deve aceitar os termos de uso para criar uma conta.');
+        }
         setLoading(true);
         try {
             const { data } = await authAPI.register({
@@ -26,7 +30,8 @@ export default function RegisterPage() {
                 email: form.email,
                 password: form.password,
                 cpf_cnpj: form.cpf_cnpj,
-                phone: form.phone
+                phone: form.phone,
+                terms_accepted: true
             });
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
@@ -101,6 +106,23 @@ export default function RegisterPage() {
                             <input type="password" className="input-field" placeholder="••••••••" required minLength={6}
                                 value={form.confirmPassword} onChange={e => update('confirmPassword', e.target.value)} />
                         </div>
+                    </div>
+
+                    <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <input
+                            type="checkbox"
+                            id="terms"
+                            checked={termsAccepted}
+                            onChange={e => setTermsAccepted(e.target.checked)}
+                            style={{
+                                width: 18, height: 18, cursor: 'pointer',
+                                accentColor: 'var(--accent-primary)',
+                                borderRadius: 4
+                            }}
+                        />
+                        <label htmlFor="terms" style={{ fontSize: 13, color: 'var(--text-secondary)', cursor: 'pointer', userSelect: 'none' }}>
+                            Li e aceito os <Link href="/terms" target="_blank" style={{ color: 'var(--accent-secondary)', textDecoration: 'underline' }}>Termos de Uso</Link>
+                        </label>
                     </div>
 
                     <button type="submit" className="btn-primary" disabled={loading} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 28px' }}>

@@ -9,10 +9,14 @@ import { v4 as uuidv4 } from 'uuid';
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { name, email, password, cpf_cnpj, phone } = body;
+        const { name, email, password, cpf_cnpj, phone, terms_accepted } = body;
 
         if (!name || !email || !password || !cpf_cnpj) {
             return jsonError('Nome, email, senha e CPF/CNPJ são obrigatórios');
+        }
+
+        if (terms_accepted !== true) {
+            return jsonError('Você deve aceitar os termos de uso para criar a conta.', 400);
         }
 
         const normalizedEmail = email.toLowerCase().trim();
@@ -41,22 +45,37 @@ export async function POST(req: NextRequest) {
             cpf_cnpj,
             phone,
             role: 'seller',
-            status: 'active'
+            status: 'active',
+            terms_accepted_at: new Date().toISOString()
         };
 
         let user: any = null;
         let error: any = null;
 
+        // Try inserting with terms_accepted_at
         ({ data: user, error } = await supabase
             .from('users')
             .insert({ ...baseUserData, password_hash: hashedPassword })
             .select()
             .single());
 
-        if (error && /password_hash/i.test(error.message || '')) {
+        // Fallback: If column doesn't exist, try without it
+        if (error && (error.code === '42703' || error.message?.includes('does not exist'))) {
+            const { terms_accepted_at, ...fallbackUserData } = baseUserData;
             ({ data: user, error } = await supabase
                 .from('users')
-                .insert({ ...baseUserData, password: hashedPassword })
+                .insert({ ...fallbackUserData, password_hash: hashedPassword })
+                .select()
+                .single());
+        }
+
+        // Fallback: If password_hash column issue (old schema), try 'password'
+        if (error && /password_hash/i.test(error.message || '')) {
+            const { terms_accepted_at, ...fallbackUserData } = baseUserData;
+            // Try with 'password' column (legacy)
+            ({ data: user, error } = await supabase
+                .from('users')
+                .insert({ ...fallbackUserData, password: hashedPassword })
                 .select()
                 .single());
         }
