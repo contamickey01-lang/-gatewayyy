@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { authAPI } from '@/lib/api';
 import toast from 'react-hot-toast';
-import { FiSave, FiUser, FiCreditCard, FiKey, FiShoppingBag } from 'react-icons/fi';
+import { FiSave, FiUser, FiCreditCard, FiKey } from 'react-icons/fi';
 
 export default function SettingsPage() {
     const [loading, setLoading] = useState(true);
@@ -14,8 +14,7 @@ export default function SettingsPage() {
         address_street: '', address_number: '', address_complement: '',
         address_neighborhood: '', address_city: '', address_state: '', address_zipcode: '',
         pix_key: '', pix_key_type: 'cpf',
-        bank_name: '', bank_agency: '', bank_account: '', bank_account_digit: '', bank_account_type: 'checking',
-        store_name: '', store_slug: '', store_description: '', store_active: false
+        bank_name: '', bank_agency: '', bank_account: '', bank_account_digit: '', bank_account_type: 'checking'
     });
 
     useEffect(() => {
@@ -35,8 +34,7 @@ export default function SettingsPage() {
                 bank_name: u.bank_name || '', bank_agency: u.bank_agency || '',
                 bank_account: u.bank_account || '',
                 bank_account_digit: u.bank_account_digit || '',
-                bank_account_type: u.bank_account_type || 'checking',
-                store_name: u.store_name || '', store_slug: u.store_slug || '', store_description: u.store_description || '', store_active: u.store_active || false
+                bank_account_type: u.bank_account_type || 'checking'
             });
         } catch (err) { console.error(err); }
         finally { setLoading(false); }
@@ -63,8 +61,7 @@ export default function SettingsPage() {
     const tabs = [
         { key: 'profile', label: 'Perfil', icon: <FiUser size={16} /> },
         { key: 'bank', label: 'Dados Bancários', icon: <FiCreditCard size={16} /> },
-        { key: 'pix', label: 'Chave Pix', icon: <FiKey size={16} /> },
-        { key: 'store', label: 'Loja', icon: <FiShoppingBag size={16} /> },
+        { key: 'pix', label: 'Chave Pix', icon: <FiKey size={16} /> }
     ];
 
     if (loading) {
@@ -191,41 +188,7 @@ export default function SettingsPage() {
                     </div>
                 )}
 
-                {tab === 'store' && (
-                    <div>
-                        <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 20 }}>Configurações da Loja</h3>
-                        <div style={{ display: 'grid', gap: 16 }}>
-                            <div>
-                                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 6 }}>Status da Loja</label>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                                    <input type="checkbox" checked={form.store_active} onChange={e => setForm({ ...form, store_active: e.target.checked })} style={{ width: 16, height: 16 }} />
-                                    <span style={{ fontSize: 14 }}>Ativar Loja Pública</span>
-                                </label>
-                            </div>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                                <div>
-                                    <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 6 }}>Nome da Loja</label>
-                                    <input className="input-field" placeholder="Ex: Minha Loja Digital" value={form.store_name} onChange={e => update('store_name', e.target.value)} />
-                                </div>
-                                <div>
-                                    <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 6 }}>Link / Slug da Loja</label>
-                                    <input className="input-field" placeholder="Ex: minhaloja" value={form.store_slug} onChange={e => update('store_slug', e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))} />
-                                    {form.store_slug && (
-                                        <div style={{ marginTop: 8 }}>
-                                            <a href={`/store/${form.store_slug}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 600 }}>
-                                                Abrir minha loja ↗
-                                            </a>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div>
-                                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 6 }}>Descrição da Loja</label>
-                                <textarea className="input-field" rows={3} placeholder="Escreva uma breve descrição sobre a sua loja..." value={form.store_description} onChange={e => update('store_description', e.target.value)} />
-                            </div>
-                        </div>
-                    </div>
-                )}
+                
 
                 <button className="btn-primary" onClick={handleSave} disabled={saving}
                     style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 8, padding: '14px 32px' }}>
