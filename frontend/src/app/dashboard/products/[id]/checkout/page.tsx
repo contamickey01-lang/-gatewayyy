@@ -33,9 +33,16 @@ export default function CheckoutCustomizationPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [uploadingBanner, setUploadingBanner] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         loadProduct();
+    }, []);
+    useEffect(() => {
+        const update = () => setIsMobile(window.innerWidth < 768);
+        update();
+        window.addEventListener('resize', update);
+        return () => window.removeEventListener('resize', update);
     }, []);
 
     const loadProduct = async () => {
@@ -105,9 +112,9 @@ export default function CheckoutCustomizationPage() {
     const previewBorder = settings.theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.08)';
 
     return (
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '16px' }}>
             {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32, flexWrap: 'wrap', gap: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                     <button onClick={() => router.push('/dashboard/products')} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 10, padding: '8px 12px', cursor: 'pointer', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
                         <FiArrowLeft size={14} /> Voltar
@@ -117,12 +124,12 @@ export default function CheckoutCustomizationPage() {
                         <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>{product?.name}</p>
                     </div>
                 </div>
-                <button onClick={handleSave} disabled={saving} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 24px' }}>
+                <button onClick={handleSave} disabled={saving} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 24px', width: isMobile ? '100%' : 'auto' }}>
                     <FiSave size={16} /> {saving ? 'Salvando...' : 'Salvar'}
                 </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '380px 1fr', gap: 24, alignItems: 'start' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '380px 1fr', gap: 24, alignItems: 'start' }}>
                 {/* Settings Panel */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
@@ -284,7 +291,7 @@ export default function CheckoutCustomizationPage() {
                 </div>
 
                 {/* LIVE PREVIEW */}
-                <div className="glass-card" style={{ padding: 0, overflow: 'hidden', position: 'sticky', top: 80 }}>
+                <div className="glass-card" style={{ padding: 0, overflow: 'hidden', position: isMobile ? 'relative' : 'sticky', top: isMobile ? undefined : 80 }}>
                     <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 600 }}>
                         <FiEye size={14} /> Preview ao Vivo
                     </div>
