@@ -157,7 +157,6 @@ export default function ClassroomPage() {
                 </div>
             </aside>
 
-            {/* Overlay */}
             {sidebarOpen && isMobile && (
                 <div
                     onClick={() => setSidebarOpen(false)}
