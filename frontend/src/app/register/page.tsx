@@ -121,7 +121,7 @@ export default function RegisterPage() {
                             }}
                         />
                         <label htmlFor="terms" style={{ fontSize: 13, color: 'var(--text-secondary)', cursor: 'pointer', userSelect: 'none' }}>
-                            Li e aceito os <Link href="/terms" target="_blank" style={{ color: 'var(--accent-secondary)', textDecoration: 'underline' }}>Termos de Uso</Link>
+                            Li e aceito os <Link href="/terms/use" target="_blank" style={{ color: 'var(--accent-secondary)', textDecoration: 'underline' }}>Termos de Uso</Link>
                         </label>
                     </div>
 
