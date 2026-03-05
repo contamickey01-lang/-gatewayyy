@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
     return jsonSuccess({
         settings: settings || {
-            fee_percentage: parseFloat(process.env.PLATFORM_FEE_PERCENTAGE || '15')
+            fee_percentage: parseFloat(process.env.PLATFORM_FEE_PERCENTAGE || '2')
         }
     });
 }

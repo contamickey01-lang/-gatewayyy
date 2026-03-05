@@ -79,7 +79,17 @@ export async function POST(req: NextRequest) {
 
         if (newStatus === 'paid') {
             // Get platform fee percentage
-            const feePercentage = parseFloat(process.env.PLATFORM_FEE_PERCENTAGE || '3');
+            let feePercentage = parseFloat(process.env.PLATFORM_FEE_PERCENTAGE || '2');
+            try {
+                const { data: settingsRow } = await supabase
+                    .from('platform_settings')
+                    .select('fee_percentage')
+                    .limit(1)
+                    .single();
+                if (settingsRow?.fee_percentage !== undefined && settingsRow.fee_percentage >= 0 && settingsRow.fee_percentage <= 100) {
+                    feePercentage = settingsRow.fee_percentage;
+                }
+            } catch {}
             const feeAmount = Math.round(order.amount * (feePercentage / 100));
 
             // Update original 'sale' transaction to confirmed and adjust to net amount
