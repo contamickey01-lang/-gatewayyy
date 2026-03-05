@@ -192,10 +192,10 @@ export default function LandingPage() {
 
               <div style={{ borderRadius: 22, border: '1px solid rgba(255,255,255,0.14)', background: 'rgba(10,10,15,0.55)', backdropFilter: 'blur(14px)', boxShadow: '0 26px 88px rgba(0,0,0,0.45)', padding: 22 }} className="landingHeroCard">
                 <h1 style={{ fontSize: 42, lineHeight: 1.05, letterSpacing: -1.2, fontWeight: 900, marginBottom: 12, color: 'white' }} className="landingHeroTitle">
-                  Tudo em um só lugar. Seu site, <span className="gradient-text">checkout</span> de alta conversão e as melhores taxas para escalar sua operação com máxima eficiência.
+                  Tudo em um só lugar.
                 </h1>
                 <p style={{ color: 'rgba(255,255,255,0.78)', fontSize: 15, lineHeight: 1.75, marginBottom: 16 }} className="landingHeroSubtitle">
-                  Tudo em um só lugar. Seu site, checkout de alta conversão e as melhores taxas para escalar sua operação com máxima eficiência.
+                  Seu site, <span className="gradient-text">checkout</span> de alta conversão e as melhores taxas para escalar sua operação com máxima eficiência.
                 </p>
 
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }} className="landingHeroActions">
