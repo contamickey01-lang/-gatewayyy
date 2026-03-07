@@ -1,5 +1,6 @@
 const { supabase } = require('../config/database');
 const FacebookService = require('../services/facebook.service');
+const TelegramService = require('../services/telegram.service');
 
 class WebhookController {
     async handlePagarme(req, res, next) {
@@ -29,6 +30,19 @@ class WebhookController {
         } catch (error) {
             console.error('Webhook error:', error);
             res.status(200).json({ received: true }); // Always return 200 to Pagar.me
+        }
+    }
+
+    async handleTelegram(req, res) {
+        try {
+            const message = req.body.message;
+            if (message) {
+                await TelegramService.handleWebhook(message);
+            }
+            res.status(200).send('OK');
+        } catch (error) {
+            console.error('Telegram webhook error:', error);
+            res.status(500).send('Error');
         }
     }
 
@@ -107,6 +121,18 @@ class WebhookController {
 
                 // Send Facebook CAPI Event
                 await FacebookService.sendPurchaseEvent(order, product);
+            }
+
+            // Send Telegram Notification
+            try {
+                await TelegramService.notifySale(order.seller_id, {
+                    product_name: order.products?.name || 'Produto',
+                    amount: order.amount,
+                    payment_method: charge.payment_method,
+                    customer_name: charge.customer?.name || 'Cliente'
+                });
+            } catch (tgError) {
+                console.error('Telegram Notification Error:', tgError);
             }
 
             // AUTO-ENROLLMENT for digital products

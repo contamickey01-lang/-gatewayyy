@@ -3,13 +3,14 @@
 import { useEffect, useState } from 'react';
 import { authAPI } from '@/lib/api';
 import toast from 'react-hot-toast';
-import { FiSave, FiUser, FiCreditCard, FiKey } from 'react-icons/fi';
+import { FiSave, FiUser, FiCreditCard, FiKey, FiBell, FiCheckCircle } from 'react-icons/fi';
 
 export default function SettingsPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [tab, setTab] = useState('profile');
     const [form, setForm] = useState({
+        id: '', telegram_chat_id: '',
         name: '', phone: '', cpf_cnpj: '',
         address_street: '', address_number: '', address_complement: '',
         address_neighborhood: '', address_city: '', address_state: '', address_zipcode: '',
@@ -26,6 +27,8 @@ export default function SettingsPage() {
             const { data } = await authAPI.getProfile();
             const u = data.user;
             setForm({
+                id: u.id,
+                telegram_chat_id: u.telegram_chat_id || '',
                 name: u.name || '', phone: u.phone || '', cpf_cnpj: u.cpf_cnpj || '',
                 address_street: u.address_street || '', address_number: u.address_number || '',
                 address_complement: u.address_complement || '', address_neighborhood: u.address_neighborhood || '',
@@ -61,7 +64,8 @@ export default function SettingsPage() {
     const tabs = [
         { key: 'profile', label: 'Perfil', icon: <FiUser size={16} /> },
         { key: 'bank', label: 'Dados Bancários', icon: <FiCreditCard size={16} /> },
-        { key: 'pix', label: 'Chave Pix', icon: <FiKey size={16} /> }
+        { key: 'pix', label: 'Chave Pix', icon: <FiKey size={16} /> },
+        { key: 'notifications', label: 'Notificações', icon: <FiBell size={16} /> }
     ];
 
     if (loading) {
@@ -189,6 +193,47 @@ export default function SettingsPage() {
                 )}
 
                 
+
+                {tab === 'notifications' && (
+                    <div>
+                        <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 20 }}>Notificações</h3>
+                        <div style={{ padding: 24, background: 'rgba(0, 136, 204, 0.05)', borderRadius: 12, border: '1px solid rgba(0, 136, 204, 0.1)' }}>
+                            <div style={{ display: 'flex', gap: 20 }}>
+                                <div style={{ width: 56, height: 56, background: '#0088cc', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0 }}>
+                                    <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
+                                </div>
+                                <div>
+                                    <h4 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>Notificações via Telegram</h4>
+                                    <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 20 }}>
+                                        Conecte sua conta ao Telegram para receber notificações instantâneas de cada venda realizada, incluindo valor e nome do produto.
+                                    </p>
+
+                                    {form.telegram_chat_id ? (
+                                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(74, 222, 128, 0.15)', color: '#4ade80', padding: '10px 20px', borderRadius: 8, fontWeight: 600, fontSize: 14 }}>
+                                            <FiCheckCircle size={18} /> Conectado com sucesso
+                                        </div>
+                                    ) : (
+                                        <a 
+                                            href={`https://t.me/GouPay_Notifica_Bot?start=${form.id}`} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            style={{ 
+                                                display: 'inline-flex', alignItems: 'center', gap: 10, 
+                                                background: '#0088cc', color: '#fff', 
+                                                padding: '12px 24px', borderRadius: 8, 
+                                                fontWeight: 600, fontSize: 14, textDecoration: 'none',
+                                                transition: 'transform 0.2s'
+                                            }}
+                                        >
+                                            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
+                                            Conectar Telegram Agora
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <button className="btn-primary" onClick={handleSave} disabled={saving}
                     style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 8, padding: '14px 32px' }}>
