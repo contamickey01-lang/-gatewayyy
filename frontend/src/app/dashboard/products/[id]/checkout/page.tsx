@@ -1,0 +1,717 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { productsAPI } from '@/lib/api';
+import toast from 'react-hot-toast';
+import axios from 'axios';
+import {
+    FiArrowLeft, FiSave, FiSun, FiMoon, FiImage, FiClock,
+    FiAlertTriangle, FiDroplet, FiEye, FiCheck, FiUpload, FiTrash2,
+    FiPlay, FiVideo
+} from 'react-icons/fi';
+
+const DEFAULT_SETTINGS = {
+    theme: 'dark',
+    banner_url: '',
+    banner_text: '',
+    show_countdown: false,
+    countdown_minutes: 15,
+    countdown_text: 'Oferta expira em:',
+    countdown_color: '#6C5CE7',
+    notice_text: '',
+    notice_type: 'warning',
+    accent_color: '#6C5CE7',
+    hide_product_image: false,
+    banner_mode_desktop: 'cover',
+    banner_mode_mobile: 'contain',
+    banner_height_desktop: 300,
+    banner_height_mobile: 200,
+    banner_position: 'center',
+    hide_phone: false,
+    hide_address_pix: false,
+    show_video: false,
+    video_url: '',
+    video_autoplay: false,
+    video_loop: false,
+    video_muted: false,
+    video_controls: true,
+    video_position: 'above_product',
+};
+
+export default function CheckoutCustomizationPage() {
+    const params = useParams();
+    const router = useRouter();
+    const productId = params.id as string;
+
+    const [product, setProduct] = useState<any>(null);
+    const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [uploadingBanner, setUploadingBanner] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        loadProduct();
+    }, []);
+    useEffect(() => {
+        const update = () => setIsMobile(window.innerWidth < 768);
+        update();
+        window.addEventListener('resize', update);
+        return () => window.removeEventListener('resize', update);
+    }, []);
+
+    const loadProduct = async () => {
+        try {
+            const { data } = await productsAPI.getById(productId);
+            setProduct(data.product);
+            if (data.product.checkout_settings) {
+                setSettings({ ...DEFAULT_SETTINGS, ...data.product.checkout_settings });
+            }
+        } catch (err) {
+            toast.error('Erro ao carregar produto');
+            router.push('/dashboard/products');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            await productsAPI.updateCheckoutSettings(productId, settings);
+            toast.success('Configurações salvas!');
+        } catch (err) {
+            toast.error('Erro ao salvar configurações');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const update = (key: string, value: any) => setSettings({ ...settings, [key]: value });
+
+    const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Limite de 4.5MB para o Vercel
+        if (file.size > 4.5 * 1024 * 1024) {
+            toast.error('A imagem é muito grande (máximo 4.5MB)');
+            return;
+        }
+
+        setUploadingBanner(true);
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            const token = localStorage.getItem('token');
+            const { data } = await axios.post('/api/upload', formData, {
+                headers: { 
+                    'Content-Type': 'multipart/form-data', 
+                    'Authorization': `Bearer ${token}` 
+                },
+                timeout: 30000
+            });
+            if (data && data.url) {
+                update('banner_url', data.url);
+                toast.success('Banner enviado!');
+            }
+        } catch (err: any) {
+            console.error('Erro no upload do banner:', err);
+            const msg = err.response?.data?.error || 'Erro ao enviar imagem';
+            toast.error(msg);
+        } finally {
+            setUploadingBanner(false);
+            e.target.value = '';
+        }
+    };
+
+    const getEmbedUrl = (url: string) => {
+        if (!url) return null;
+        
+        // YouTube
+        if (url.includes('youtube.com') || url.includes('youtu.be')) {
+            const id = url.includes('v=') ? url.split('v=')[1]?.split('&')[0] : url.split('/').pop()?.split('?')[0];
+            if (id) return `https://www.youtube.com/embed/${id}?autoplay=${settings.video_autoplay ? 1 : 0}&mute=${settings.video_muted ? 1 : 0}&loop=${settings.video_loop ? 1 : 0}&playlist=${id}&controls=${settings.video_controls ? 1 : 0}`;
+        }
+        
+        // Vimeo
+        if (url.includes('vimeo.com')) {
+            const id = url.split('/').pop()?.split('?')[0];
+            if (id) return `https://player.vimeo.com/video/${id}?autoplay=${settings.video_autoplay ? 1 : 0}&muted=${settings.video_muted ? 1 : 0}&loop=${settings.video_loop ? 1 : 0}&controls=${settings.video_controls ? 1 : 0}`;
+        }
+
+        // Google Drive
+        if (url.includes('drive.google.com')) {
+            const id = url.split('/d/')[1]?.split('/')[0] || url.split('id=')[1]?.split('&')[0];
+            if (id) return `https://drive.google.com/uc?id=${id}&export=download`;
+        }
+
+        // Dropbox
+        if (url.includes('dropbox.com')) {
+            return url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '').replace('&dl=0', '');
+        }
+
+        return url;
+    };
+
+    const videoSrcPreview = getEmbedUrl(settings.video_url);
+    const isIframePreview = videoSrcPreview?.includes('youtube.com/embed') || videoSrcPreview?.includes('player.vimeo.com/video');
+
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+                <div style={{ width: 40, height: 40, border: '3px solid var(--border-color)', borderTopColor: 'var(--accent-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            </div>
+        );
+    }
+
+    const previewBg = settings.theme === 'light'
+        ? 'linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)'
+        : 'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%)';
+    const previewText = settings.theme === 'light' ? '#1a1a2e' : '#f5f5f5';
+    const previewMuted = settings.theme === 'light' ? '#666' : '#999';
+    const previewCard = settings.theme === 'light' ? 'rgba(255,255,255,0.9)' : 'rgba(25,25,45,0.8)';
+    const previewBorder = settings.theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.08)';
+
+    return (
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '16px' }}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32, flexWrap: 'wrap', gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <button onClick={() => router.push('/dashboard/products')} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 10, padding: '8px 12px', cursor: 'pointer', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
+                        <FiArrowLeft size={14} /> Voltar
+                    </button>
+                    <div>
+                        <h1 style={{ fontSize: 22, fontWeight: 700 }}>Personalizar <span className="gradient-text">Checkout</span></h1>
+                        <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>{product?.name}</p>
+                    </div>
+                </div>
+                <button onClick={handleSave} disabled={saving} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 24px', width: isMobile ? '100%' : 'auto' }}>
+                    <FiSave size={16} /> {saving ? 'Salvando...' : 'Salvar'}
+                </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '380px 1fr', gap: 24, alignItems: 'start' }}>
+                {/* Settings Panel */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+                    {/* Theme */}
+                    <div className="glass-card" style={{ padding: 20 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                            {settings.theme === 'dark' ? <FiMoon size={16} /> : <FiSun size={16} />}
+                            <h3 style={{ fontSize: 14, fontWeight: 600 }}>Tema</h3>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                            {['dark', 'light'].map(t => (
+                                <button key={t} onClick={() => update('theme', t)} style={{
+                                    padding: '12px', borderRadius: 10, cursor: 'pointer', fontSize: 13, fontWeight: 500,
+                                    background: settings.theme === t ? 'rgba(108,92,231,0.12)' : 'var(--bg-secondary)',
+                                    border: `1px solid ${settings.theme === t ? 'var(--accent-primary)' : 'var(--border-color)'}`,
+                                    color: settings.theme === t ? 'var(--accent-secondary)' : 'var(--text-secondary)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
+                                }}>
+                                    {t === 'dark' ? <><FiMoon size={14} /> Escuro</> : <><FiSun size={14} /> Claro</>}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="glass-card" style={{ padding: 20 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                            <h3 style={{ fontSize: 14, fontWeight: 600 }}>Campos do Checkout</h3>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 10 }}>
+                            <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                                <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Não pedir Telefone</span>
+                                <button onClick={() => update('hide_phone', !settings.hide_phone)} style={{
+                                    width: 40, height: 22, borderRadius: 11, cursor: 'pointer',
+                                    background: settings.hide_phone ? settings.accent_color : 'var(--bg-secondary)',
+                                    border: `1px solid ${settings.hide_phone ? settings.accent_color : 'var(--border-color)'}`,
+                                    position: 'relative'
+                                }}>
+                                    <div style={{
+                                        width: 16, height: 16, borderRadius: '50%', background: 'white',
+                                        position: 'absolute', top: 2, transition: 'left 0.2s',
+                                        left: settings.hide_phone ? 20 : 2
+                                    }} />
+                                </button>
+                            </label>
+                            <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                                <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Não pedir Endereço no Pix</span>
+                                <button onClick={() => update('hide_address_pix', !settings.hide_address_pix)} style={{
+                                    width: 40, height: 22, borderRadius: 11, cursor: 'pointer',
+                                    background: settings.hide_address_pix ? settings.accent_color : 'var(--bg-secondary)',
+                                    border: `1px solid ${settings.hide_address_pix ? settings.accent_color : 'var(--border-color)'}`,
+                                    position: 'relative'
+                                }}>
+                                    <div style={{
+                                        width: 16, height: 16, borderRadius: '50%', background: 'white',
+                                        position: 'absolute', top: 2, transition: 'left 0.2s',
+                                        left: settings.hide_address_pix ? 20 : 2
+                                    }} />
+                                </button>
+                            </label>
+                        </div>
+                    </div>
+
+                    {/* Accent Color */}
+                    <div className="glass-card" style={{ padding: 20 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                            <FiDroplet size={16} />
+                            <h3 style={{ fontSize: 14, fontWeight: 600 }}>Cor de Destaque</h3>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <input type="color" value={settings.accent_color} onChange={e => update('accent_color', e.target.value)}
+                                style={{ width: 48, height: 48, border: 'none', borderRadius: 10, cursor: 'pointer', background: 'none' }} />
+                            <input className="input-field" value={settings.accent_color} onChange={e => update('accent_color', e.target.value)}
+                                style={{ flex: 1, fontFamily: 'monospace' }} />
+                        </div>
+                        <div style={{ display: 'flex', gap: 6, marginTop: 12, flexWrap: 'wrap' }}>
+                            {['#6C5CE7', '#00CEC9', '#E17055', '#00B894', '#FDCB6E', '#E84393', '#0984E3', '#FF6B6B'].map(c => (
+                                <button key={c} onClick={() => update('accent_color', c)} style={{
+                                    width: 28, height: 28, borderRadius: 8, border: settings.accent_color === c ? '2px solid white' : '2px solid transparent',
+                                    background: c, cursor: 'pointer', transition: 'transform 0.15s'
+                                }} />
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Vídeo de Demonstração */}
+                    <div className="glass-card" style={{ padding: 20 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <FiVideo size={16} />
+                                <h3 style={{ fontSize: 14, fontWeight: 600 }}>Vídeo de Demonstração</h3>
+                            </div>
+                            <button onClick={() => update('show_video', !settings.show_video)} style={{
+                                width: 40, height: 22, borderRadius: 11, cursor: 'pointer',
+                                background: settings.show_video ? settings.accent_color : 'var(--bg-secondary)',
+                                border: `1px solid ${settings.show_video ? settings.accent_color : 'var(--border-color)'}`,
+                                position: 'relative'
+                            }}>
+                                <div style={{
+                                    width: 16, height: 16, borderRadius: '50%', background: 'white',
+                                    position: 'absolute', top: 2, transition: 'left 0.2s',
+                                    left: settings.show_video ? 20 : 2
+                                }} />
+                            </button>
+                        </div>
+
+                        {settings.show_video && (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                        <div>
+                                             <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>Link do vídeo (MP4)</label>
+                                             <input 
+                                                 className="input-field" 
+                                                 placeholder="https://exemplo.com/video.mp4" 
+                                                 value={settings.video_url} 
+                                                 onChange={e => update('video_url', e.target.value)}
+                                                 style={{ width: '100%', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
+                                             />
+                                             <p style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 4 }}>
+                                                 Dica: Links do Google Drive e Dropbox são convertidos automaticamente.
+                                             </p>
+                                         </div>
+
+                                        {settings.video_url && (
+                                            <div style={{ 
+                                                position: 'relative', 
+                                                borderRadius: 10, 
+                                                overflow: 'hidden', 
+                                                border: '1px solid var(--border-color)', 
+                                                background: '#000',
+                                                aspectRatio: '16/9',
+                                                width: '100%'
+                                            }}>
+                                                {isIframePreview ? (
+                                                    <iframe 
+                                                        src={videoSrcPreview!} 
+                                                        style={{ width: '100%', height: '100%', border: 'none' }} 
+                                                    />
+                                                ) : (
+                                                    <video 
+                                                        key={videoSrcPreview}
+                                                        src={videoSrcPreview!} 
+                                                        controls 
+                                                        muted
+                                                        playsInline
+                                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+                                                    />
+                                                )}
+                                                <button onClick={() => update('video_url', '')} style={{
+                                                    position: 'absolute', top: 6, right: 6, width: 28, height: 28, borderRadius: 8,
+                                                    background: 'rgba(0,0,0,0.7)', border: 'none', cursor: 'pointer', color: '#ff6b6b',
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10
+                                                }}>
+                                                    <FiTrash2 size={13} />
+                                                </button>
+                                            </div>
+                                        )}
+
+                                <div>
+                                    <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>Posição do vídeo</label>
+                                    <select 
+                                        className="input-field" 
+                                        value={settings.video_position} 
+                                        onChange={e => update('video_position', e.target.value)}
+                                        style={{ width: '100%', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
+                                    >
+                                        <option value="above_product">Acima do Produto</option>
+                                        <option value="below_product">Abaixo do Produto</option>
+                                        <option value="above_checkout">Acima do Formulário</option>
+                                        <option value="below_checkout">Abaixo do Formulário</option>
+                                    </select>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                        <input type="checkbox" checked={settings.video_autoplay} onChange={e => update('video_autoplay', e.target.checked)} />
+                                        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Autoplay</span>
+                                    </label>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                        <input type="checkbox" checked={settings.video_loop} onChange={e => update('video_loop', e.target.checked)} />
+                                        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Loop</span>
+                                    </label>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                        <input type="checkbox" checked={settings.video_muted} onChange={e => update('video_muted', e.target.checked)} />
+                                        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Mudo</span>
+                                    </label>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                        <input type="checkbox" checked={settings.video_controls} onChange={e => update('video_controls', e.target.checked)} />
+                                        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Controles</span>
+                                    </label>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Banner */}
+                    <div className="glass-card" style={{ padding: 20 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                            <FiImage size={16} />
+                            <h3 style={{ fontSize: 14, fontWeight: 600 }}>Banner</h3>
+                        </div>
+                        <div style={{ marginBottom: 12 }}>
+                            <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>Imagem do banner</label>
+                            {settings.banner_url ? (
+                                <div style={{ position: 'relative', borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                                    <img src={settings.banner_url} alt="Banner" style={{ width: '100%', height: 100, objectFit: 'cover', display: 'block' }} />
+                                    <button onClick={() => update('banner_url', '')} style={{
+                                        position: 'absolute', top: 6, right: 6, width: 28, height: 28, borderRadius: 8,
+                                        background: 'rgba(0,0,0,0.7)', border: 'none', cursor: 'pointer', color: '#ff6b6b',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                    }}>
+                                        <FiTrash2 size={13} />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div
+                                    onClick={() => document.getElementById('bannerUpload')?.click()}
+                                    style={{
+                                        border: '2px dashed var(--border-color)', borderRadius: 10, padding: '20px 16px',
+                                        textAlign: 'center', cursor: uploadingBanner ? 'not-allowed' : 'pointer',
+                                        transition: 'border-color 0.2s', opacity: uploadingBanner ? 0.6 : 1
+                                    }}
+                                >
+                                    {uploadingBanner ? (
+                                        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Enviando...</div>
+                                    ) : (
+                                        <>
+                                            <FiUpload size={20} style={{ marginBottom: 6, color: 'var(--accent-secondary)' }} />
+                                            <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>Clique para enviar uma imagem</p>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                            <input id="bannerUpload" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleBannerUpload} />
+                        </div>
+                        <div>
+                            <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4, display: 'block' }}>Texto sobreposto</label>
+                            <input className="input-field" placeholder="Ex: Oferta Especial!" value={settings.banner_text} onChange={e => update('banner_text', e.target.value)} />
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 12 }}>
+                            <div>
+                                <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>Altura (desktop, px)</label>
+                                <input type="number" min={120} max={600} className="input-field"
+                                    value={settings.banner_height_desktop}
+                                    onChange={e => update('banner_height_desktop', Math.max(120, Math.min(600, parseInt(e.target.value || '0'))))} />
+                            </div>
+                            <div>
+                                <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>Altura (mobile, px)</label>
+                                <input type="number" min={120} max={400} className="input-field"
+                                    value={settings.banner_height_mobile}
+                                    onChange={e => update('banner_height_mobile', Math.max(120, Math.min(400, parseInt(e.target.value || '0'))))} />
+                            </div>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 12 }}>
+                            <div>
+                                <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>Modo (desktop)</label>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+                                    {[
+                                        { key: 'cover', label: 'Preencher' },
+                                        { key: 'contain', label: 'Completo' },
+                                    ].map(opt => (
+                                        <button key={opt.key} onClick={() => update('banner_mode_desktop', opt.key)} style={{
+                                            padding: '8px', borderRadius: 8, cursor: 'pointer', fontSize: 11, fontWeight: 600,
+                                            background: settings.banner_mode_desktop === opt.key ? `${settings.accent_color}22` : 'var(--bg-secondary)',
+                                            border: `1px solid ${settings.banner_mode_desktop === opt.key ? settings.accent_color : 'var(--border-color)'}`,
+                                            color: settings.banner_mode_desktop === opt.key ? settings.accent_color : 'var(--text-muted)',
+                                        }}>
+                                            {opt.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6, display: 'block' }}>Modo (mobile)</label>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+                                    {[
+                                        { key: 'contain', label: 'Completo' },
+                                        { key: 'cover', label: 'Preencher' },
+                                    ].map(opt => (
+                                        <button key={opt.key} onClick={() => update('banner_mode_mobile', opt.key)} style={{
+                                            padding: '8px', borderRadius: 8, cursor: 'pointer', fontSize: 11, fontWeight: 600,
+                                            background: settings.banner_mode_mobile === opt.key ? `${settings.accent_color}22` : 'var(--bg-secondary)',
+                                            border: `1px solid ${settings.banner_mode_mobile === opt.key ? settings.accent_color : 'var(--border-color)'}`,
+                                            color: settings.banner_mode_mobile === opt.key ? settings.accent_color : 'var(--text-muted)',
+                                        }}>
+                                            {opt.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        {/* Seção de Posição removida conforme solicitado */}
+                    </div>
+
+                    {/* Countdown */}
+                    <div className="glass-card" style={{ padding: 20 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <FiClock size={16} />
+                                <h3 style={{ fontSize: 14, fontWeight: 600 }}>Contador Regressivo</h3>
+                            </div>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                <div onClick={() => update('show_countdown', !settings.show_countdown)} style={{
+                                    width: 40, height: 22, borderRadius: 11, cursor: 'pointer', transition: 'background 0.2s',
+                                    background: settings.show_countdown ? settings.accent_color : 'var(--bg-secondary)',
+                                    border: `1px solid ${settings.show_countdown ? settings.accent_color : 'var(--border-color)'}`,
+                                    position: 'relative'
+                                }}>
+                                    <div style={{
+                                        width: 16, height: 16, borderRadius: '50%', background: 'white',
+                                        position: 'absolute', top: 2, transition: 'left 0.2s',
+                                        left: settings.show_countdown ? 20 : 2
+                                    }} />
+                                </div>
+                            </label>
+                        </div>
+                        {settings.show_countdown && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                <div>
+                                    <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4, display: 'block' }}>Texto</label>
+                                    <input className="input-field" value={settings.countdown_text} onChange={e => update('countdown_text', e.target.value)} />
+                                </div>
+                                <div>
+                                    <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4, display: 'block' }}>Minutos</label>
+                                    <input type="number" className="input-field" min={1} max={60} value={settings.countdown_minutes} onChange={e => update('countdown_minutes', parseInt(e.target.value) || 15)} />
+                                </div>
+                                <div>
+                                    <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4, display: 'block' }}>Cor do contador</label>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                        <input type="color" value={settings.countdown_color} onChange={e => update('countdown_color', e.target.value)}
+                                            style={{ width: 40, height: 40, border: 'none', borderRadius: 8, cursor: 'pointer', background: 'none' }} />
+                                        <input className="input-field" value={settings.countdown_color} onChange={e => update('countdown_color', e.target.value)}
+                                            style={{ flex: 1, fontFamily: 'monospace' }} />
+                                    </div>
+                                    <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
+                                        {['#6C5CE7', '#00CEC9', '#E17055', '#00B894', '#FDCB6E', '#E84393', '#0984E3', '#FF6B6B', '#222222'].map(c => (
+                                            <button key={c} onClick={() => update('countdown_color', c)} style={{
+                                                width: 24, height: 24, borderRadius: 6, border: settings.countdown_color === c ? '2px solid white' : '2px solid transparent',
+                                                background: c, cursor: 'pointer', transition: 'transform 0.15s'
+                                            }} />
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Notice */}
+                    <div className="glass-card" style={{ padding: 20 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                            <FiAlertTriangle size={16} />
+                            <h3 style={{ fontSize: 14, fontWeight: 600 }}>Aviso / Destaque</h3>
+                        </div>
+                        <div style={{ marginBottom: 12 }}>
+                            <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4, display: 'block' }}>Texto do aviso</label>
+                            <input className="input-field" placeholder="Ex: ⚡ Últimas vagas disponíveis!" value={settings.notice_text} onChange={e => update('notice_text', e.target.value)} />
+                        </div>
+                        <div>
+                            <label style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4, display: 'block' }}>Tipo</label>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+                                {[
+                                    { key: 'warning', label: 'Alerta', color: '#FDCB6E' },
+                                    { key: 'info', label: 'Info', color: '#74B9FF' },
+                                    { key: 'success', label: 'Sucesso', color: '#55EFC4' },
+                                ].map(t => (
+                                    <button key={t.key} onClick={() => update('notice_type', t.key)} style={{
+                                        padding: '8px', borderRadius: 8, cursor: 'pointer', fontSize: 11, fontWeight: 600,
+                                        background: settings.notice_type === t.key ? `${t.color}22` : 'var(--bg-secondary)',
+                                        border: `1px solid ${settings.notice_type === t.key ? t.color : 'var(--border-color)'}`,
+                                        color: settings.notice_type === t.key ? t.color : 'var(--text-muted)',
+                                    }}>
+                                        {t.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* LIVE PREVIEW */}
+                <div className="glass-card" style={{ padding: 0, overflow: 'hidden', position: isMobile ? 'relative' : 'sticky', top: isMobile ? undefined : 80 }}>
+                    <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 600 }}>
+                        <FiEye size={14} /> Preview ao Vivo
+                    </div>
+                    <div style={{
+                        background: previewBg, padding: 0, minHeight: 500, color: previewText,
+                        fontSize: 12, position: 'relative', overflow: 'hidden',
+                        display: 'flex', flexDirection: 'column'
+                    }}>
+                        {/* Countdown Preview */}
+                        {settings.show_countdown && (
+                            <div style={{
+                                background: settings.countdown_color || settings.accent_color, color: 'white', padding: '8px 16px',
+                                textAlign: 'center', fontSize: 12, fontWeight: 600,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
+                            }}>
+                                <FiClock size={12} />
+                                {settings.countdown_text} <span style={{ fontFamily: 'monospace', fontWeight: 700 }}>{settings.countdown_minutes}:00</span>
+                            </div>
+                        )}
+
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '10px 16px' }}>
+                            <img src="/logo.png" alt="GouPay Logo" style={{ width: 36, height: 36, objectFit: 'contain' }} />
+                            <span style={{ fontSize: 18, fontWeight: 800, color: previewText }}>
+                                Gou<span className="gradient-text">Pay</span>
+                            </span>
+                        </div>
+
+                        {/* Banner Preview */}
+                        {(settings.banner_url || settings.banner_text) && (
+                            <div className="checkoutBannerPreview" style={{
+                                height: settings.banner_url ? (settings.banner_height_desktop || 220) : 'auto', position: 'relative',
+                                background: settings.banner_url ? `url(${settings.banner_url}) ${(settings.banner_position || 'center')}/${settings.banner_mode_desktop === 'contain' ? 'contain' : 'cover'} no-repeat` : `linear-gradient(135deg, ${settings.accent_color}44, ${settings.accent_color}11)`,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}>
+                                {settings.banner_text && (
+                                    <div style={{
+                                        padding: '12px 20px', fontSize: 14, fontWeight: 700, color: 'white',
+                                        textShadow: settings.banner_url ? '0 2px 8px rgba(0,0,0,0.6)' : 'none',
+                                        background: settings.banner_url ? 'rgba(0,0,0,0.4)' : 'transparent',
+                                        width: '100%', textAlign: 'center'
+                                    }}>
+                                        {settings.banner_text}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Notice Preview */}
+                        {settings.notice_text && (
+                            <div style={{
+                                margin: '12px 16px', padding: '10px 14px', borderRadius: 8, fontSize: 12, fontWeight: 500,
+                                background: settings.notice_type === 'warning' ? 'rgba(253,203,110,0.12)' : settings.notice_type === 'info' ? 'rgba(116,185,255,0.12)' : 'rgba(85,239,196,0.12)',
+                                border: `1px solid ${settings.notice_type === 'warning' ? 'rgba(253,203,110,0.3)' : settings.notice_type === 'info' ? 'rgba(116,185,255,0.3)' : 'rgba(85,239,196,0.3)'}`,
+                                color: settings.notice_type === 'warning' ? '#FDCB6E' : settings.notice_type === 'info' ? '#74B9FF' : '#55EFC4'
+                            }}>
+                                {settings.notice_text}
+                            </div>
+                        )}
+
+                        {/* Mini Checkout Preview */}
+                        <div style={{ 
+                            padding: '16px', 
+                            display: 'grid', 
+                            gridTemplateColumns: '1fr 1fr', 
+                            gap: 12,
+                            flex: 1,
+                            alignContent: (settings.banner_url || settings.banner_text) ? 'start' : 'center'
+                        }}>
+                            {/* Product card mini */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                {settings.show_video && settings.video_position === 'above_product' && (
+                                    <div style={{ background: '#000', borderRadius: 8, aspectRatio: '16/9', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginBottom: 8 }}>
+                                        <FiPlay size={20} color="white" />
+                                    </div>
+                                )}
+                                <div style={{ background: previewCard, borderRadius: 12, border: `1px solid ${previewBorder}`, overflow: 'hidden' }}>
+                                    {!settings.hide_product_image && (
+                                        <div style={{ height: 80, background: `linear-gradient(135deg, ${settings.accent_color}33, ${settings.accent_color}11)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <FiImage size={20} style={{ opacity: 0.3, color: previewText }} />
+                                        </div>
+                                    )}
+                                    <div style={{ padding: 12 }}>
+                                        <div style={{ fontSize: 13, fontWeight: 700, marginTop: 4, color: previewText }}>{product?.name || 'Nome do Produto'}</div>
+                                        <div style={{ fontSize: 16, fontWeight: 800, marginTop: 8, color: settings.accent_color }}>
+                                            R$ {product?.price_display || '97,00'}
+                                        </div>
+                                    </div>
+                                </div>
+                                {settings.show_video && settings.video_position === 'below_product' && (
+                                    <div style={{ background: '#000', borderRadius: 8, aspectRatio: '16/9', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: 8 }}>
+                                        <FiPlay size={20} color="white" />
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Form mini */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                {settings.show_video && settings.video_position === 'above_checkout' && (
+                                    <div style={{ background: '#000', borderRadius: 8, aspectRatio: '16/9', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginBottom: 8 }}>
+                                        <FiPlay size={20} color="white" />
+                                    </div>
+                                )}
+                                <div style={{ background: previewCard, borderRadius: 12, border: `1px solid ${previewBorder}`, padding: 12 }}>
+                                    <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: previewText }}>Finalizar Compra</div>
+                                    {['Nome', 'Email', 'CPF', ...(settings.hide_phone ? [] : ['Telefone']), ...(settings.hide_address_pix ? [] : ['Endereço'])].map(f => (
+                                        <div key={f} style={{
+                                            background: settings.theme === 'light' ? '#f0f0f0' : 'rgba(255,255,255,0.05)',
+                                            borderRadius: 6, padding: '6px 8px', marginBottom: 6, fontSize: 10, color: previewMuted
+                                        }}>{f}</div>
+                                    ))}
+                                    <div style={{
+                                        background: settings.accent_color, borderRadius: 8, padding: '8px',
+                                        textAlign: 'center', fontSize: 11, fontWeight: 700, color: 'white', marginTop: 8
+                                    }}>
+                                        Pagar Agora
+                                    </div>
+                                </div>
+                                {settings.show_video && settings.video_position === 'below_checkout' && (
+                                    <div style={{ background: '#000', borderRadius: 8, aspectRatio: '16/9', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: 8 }}>
+                                        <FiPlay size={20} color="white" />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>{`
+                .input-field:focus { border-color: ${settings.accent_color} !important; }
+                @media (max-width: 640px) {
+                    .checkoutBannerPreview {
+                        height: ${(settings.banner_height_mobile || 200)}px !important;
+                        background-size: ${settings.banner_mode_mobile === 'contain' ? 'contain' : 'cover'} !important;
+                        background-position: center !important;
+                        background-repeat: no-repeat !important;
+                    }
+                }
+            `}</style>
+        </div>
+    );
+}
